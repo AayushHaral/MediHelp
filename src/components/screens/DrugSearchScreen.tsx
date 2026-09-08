@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { DrugItem, ScreenType } from '../../types';
 import { MOCK_DRUGS } from '../../data/mockData';
+import { useLanguage } from '../../context/LanguageContext';
 
 interface DrugSearchScreenProps {
   onSelectDrug: (drug: DrugItem) => void;
@@ -11,6 +12,7 @@ export const DrugSearchScreen: React.FC<DrugSearchScreenProps> = ({ onSelectDrug
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedFilter, setSelectedFilter] = useState<'all' | 'generic' | 'mail-order' | 'local-fast'>('all');
   const [selectedClass, setSelectedClass] = useState<string>('all');
+  const { t, speakText, isSpeaking, stopSpeaking } = useLanguage();
 
   const drugClasses = useMemo(() => {
     const classes = Array.from(new Set(MOCK_DRUGS.map((d) => d.drugClass)));
@@ -43,6 +45,12 @@ export const DrugSearchScreen: React.FC<DrugSearchScreenProps> = ({ onSelectDrug
     });
   }, [searchQuery, selectedFilter, selectedClass]);
 
+  const handleSpeakDrug = (drug: DrugItem) => {
+    const bestQuote = drug.quotes.find((q) => q.bestValue) || drug.quotes[0];
+    const text = `${drug.name}. ${drug.selectedStrength}, ${drug.selectedForm}, ${drug.selectedQuantity} count. ${t('card.lowestCash')}: $${drug.lowestPrice.toFixed(2)} ${t('card.at')} ${bestQuote.pharmacyName}. ${t('card.save')} ${drug.typicalSavingsPercent}%.`;
+    speakText(text);
+  };
+
   return (
     <div className="space-y-6 animate-fade-in pb-12">
       {/* Hero Search Box */}
@@ -52,15 +60,16 @@ export const DrugSearchScreen: React.FC<DrugSearchScreenProps> = ({ onSelectDrug
         <div className="max-w-3xl space-y-4 relative z-10">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-secondary text-white text-xs font-semibold tracking-wide shadow-xs">
             <span className="material-symbols-outlined text-[16px]">price_check</span>
-            <span>Real-Time Multi-Pharmacy Clearinghouse</span>
+            <span>{t('search.badge')}</span>
           </div>
 
           <h1 className="font-headline font-extrabold text-2xl sm:text-3xl md:text-4xl text-white tracking-tight leading-tight">
-            Compare prescription prices across <span className="text-secondary-fixed">68,000+ pharmacies</span>
+            {t('search.title')}{' '}
+            <span className="text-secondary-fixed">{t('search.pharmacyCount')}</span>
           </h1>
 
           <p className="text-sm md:text-base text-inverse-on-surface/80 font-normal">
-            Direct wholesale prices, unadvertised manufacturer discount cards, and algorithmic split-prescription routing.
+            {t('search.subtitle')}
           </p>
 
           {/* Search Input Bar */}
@@ -71,7 +80,7 @@ export const DrugSearchScreen: React.FC<DrugSearchScreenProps> = ({ onSelectDrug
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search by drug name (e.g. Atorvastatin, Ozempic, Metformin, Adderall, Zoloft)..."
+                placeholder={t('search.placeholder')}
                 className="w-full px-3 py-2.5 text-on-surface text-sm md:text-base focus:outline-none placeholder:text-outline/70 bg-transparent font-medium"
               />
               {searchQuery && (
@@ -86,14 +95,14 @@ export const DrugSearchScreen: React.FC<DrugSearchScreenProps> = ({ onSelectDrug
                 onClick={() => {}}
                 className="px-5 py-2.5 bg-secondary text-white font-headline font-semibold text-sm rounded-lg hover:bg-secondary/90 transition-colors shrink-0 shadow-xs flex items-center gap-1.5"
               >
-                <span>Find Savings</span>
+                <span>{t('search.btn')}</span>
                 <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
               </button>
             </div>
 
             {/* Quick Popular Drug Pills */}
             <div className="flex items-center gap-2 mt-3 flex-wrap text-xs">
-              <span className="text-inverse-on-surface/70 font-medium">Trending searches:</span>
+              <span className="text-inverse-on-surface/70 font-medium">{t('search.trending')}</span>
               {['Atorvastatin', 'Ozempic', 'Metformin', 'Adderall XR', 'Sertraline', 'Albuterol'].map((term) => (
                 <button
                   key={term}
@@ -112,7 +121,7 @@ export const DrugSearchScreen: React.FC<DrugSearchScreenProps> = ({ onSelectDrug
       <div className="bg-surface-container-lowest p-4 rounded-xl border border-outline-variant/30 flex flex-wrap items-center justify-between gap-3 shadow-xs">
         <div className="flex items-center gap-2 flex-wrap">
           <span className="text-xs font-bold text-on-surface uppercase tracking-wider font-mono mr-1">
-            Filter:
+            {t('search.filter')}
           </span>
           <button
             onClick={() => setSelectedFilter('all')}
@@ -122,7 +131,7 @@ export const DrugSearchScreen: React.FC<DrugSearchScreenProps> = ({ onSelectDrug
                 : 'bg-surface-container text-on-surface-variant hover:bg-surface-container-high'
             }`}
           >
-            All Medications
+            {t('search.allMeds')}
           </button>
           <button
             onClick={() => setSelectedFilter('generic')}
@@ -132,7 +141,7 @@ export const DrugSearchScreen: React.FC<DrugSearchScreenProps> = ({ onSelectDrug
                 : 'bg-surface-container text-on-surface-variant hover:bg-surface-container-high'
             }`}
           >
-            Generic Alternatives
+            {t('search.genericOnly')}
           </button>
           <button
             onClick={() => setSelectedFilter('local-fast')}
@@ -142,7 +151,7 @@ export const DrugSearchScreen: React.FC<DrugSearchScreenProps> = ({ onSelectDrug
                 : 'bg-surface-container text-on-surface-variant hover:bg-surface-container-high'
             }`}
           >
-            Ready in 15 Min
+            {t('search.fastPickup')}
           </button>
           <button
             onClick={() => setSelectedFilter('mail-order')}
@@ -152,19 +161,19 @@ export const DrugSearchScreen: React.FC<DrugSearchScreenProps> = ({ onSelectDrug
                 : 'bg-surface-container text-on-surface-variant hover:bg-surface-container-high'
             }`}
           >
-            Free Mail-Order Delivery
+            {t('search.mailOrder')}
           </button>
         </div>
 
         {/* Drug Class Filter dropdown */}
         <div className="flex items-center gap-2 text-xs">
-          <span className="text-on-surface-variant font-medium">Therapeutic Class:</span>
+          <span className="text-on-surface-variant font-medium">{t('search.classLabel')}</span>
           <select
             value={selectedClass}
             onChange={(e) => setSelectedClass(e.target.value)}
             className="px-2.5 py-1.5 rounded-lg bg-surface-container text-on-surface font-medium border border-outline-variant/30 text-xs focus:outline-none focus:ring-1 focus:ring-secondary"
           >
-            <option value="all">All Classes</option>
+            <option value="all">{t('search.allClasses')}</option>
             {drugClasses.filter((c) => c !== 'all').map((c) => (
               <option key={c} value={c}>{c}</option>
             ))}
@@ -176,16 +185,16 @@ export const DrugSearchScreen: React.FC<DrugSearchScreenProps> = ({ onSelectDrug
       <div className="space-y-4">
         <div className="flex items-center justify-between text-xs text-on-surface-variant px-1">
           <span>
-            Showing <strong className="text-on-surface font-mono">{filteredDrugs.length}</strong> matching medications
+            {t('search.showing')} <strong className="text-on-surface font-mono">{filteredDrugs.length}</strong> {t('search.matchingMeds')}
           </span>
           <div className="flex items-center gap-2">
-            <span>Prices calibrated to: <strong className="text-on-surface">SF 94103</strong></span>
+            <span>{t('search.pricesCalibrated')} <strong className="text-on-surface">SF 94103</strong></span>
             <button
               onClick={() => onNavigate('smart-routing')}
               className="text-secondary font-semibold hover:underline flex items-center gap-1"
             >
               <span className="material-symbols-outlined text-[15px]">alt_route</span>
-              Optimize Multi-Rx Cart
+              {t('search.optimizeCart')}
             </button>
           </div>
         </div>
@@ -193,7 +202,6 @@ export const DrugSearchScreen: React.FC<DrugSearchScreenProps> = ({ onSelectDrug
         <div className="grid grid-cols-1 gap-4">
           {filteredDrugs.map((drug) => {
             const bestQuote = drug.quotes.find((q) => q.bestValue) || drug.quotes[0];
-            const retailDiff = drug.averageRetailPrice - drug.lowestPrice;
 
             return (
               <div
@@ -221,18 +229,30 @@ export const DrugSearchScreen: React.FC<DrugSearchScreenProps> = ({ onSelectDrug
                       <h2 className="font-headline font-bold text-lg sm:text-xl text-on-surface">
                         {drug.name}
                       </h2>
+
+                      {/* Senior Voice Pronounce Button */}
+                      <button
+                        type="button"
+                        onClick={() => handleSpeakDrug(drug)}
+                        className="p-1.5 rounded-lg bg-surface-container hover:bg-secondary/20 text-secondary transition-colors"
+                        title={t('card.listen')}
+                        aria-label={`${t('card.listen')}: ${drug.name}`}
+                      >
+                        <span className="material-symbols-outlined text-[18px]">volume_up</span>
+                      </button>
+
                       {drug.brandName !== drug.genericName && (
                         <span className="text-xs text-on-surface-variant font-medium">
-                          (Generic for <span className="font-semibold">{drug.brandName}</span>)
+                          ({t('card.genericFor')} <span className="font-semibold">{drug.brandName}</span>)
                         </span>
                       )}
                       {drug.isGenericAvailable ? (
                         <span className="px-2 py-0.5 rounded text-[11px] font-semibold bg-secondary-container text-on-secondary-container">
-                          Generic Available
+                          {t('card.genericAvailable')}
                         </span>
                       ) : (
                         <span className="px-2 py-0.5 rounded text-[11px] font-semibold bg-surface-container-high text-on-surface-variant">
-                          Brand Exclusive
+                          {t('card.brandExclusive')}
                         </span>
                       )}
                     </div>
@@ -244,12 +264,12 @@ export const DrugSearchScreen: React.FC<DrugSearchScreenProps> = ({ onSelectDrug
                     <div className="flex items-center gap-3 pt-1 flex-wrap text-xs text-on-surface-variant font-mono">
                       <span className="flex items-center gap-1">
                         <span className="material-symbols-outlined text-[15px] text-secondary">tune</span>
-                        Standard: {drug.selectedStrength}
+                        {t('card.standard')} {drug.selectedStrength}
                       </span>
                       <span>•</span>
-                      <span>Form: {drug.selectedForm}</span>
+                      <span>{t('card.form')} {drug.selectedForm}</span>
                       <span>•</span>
-                      <span>Qty: {drug.selectedQuantity} count</span>
+                      <span>{t('card.qty')} {drug.selectedQuantity}</span>
                     </div>
 
                     {/* Pharmacy price ticker chips */}
@@ -277,10 +297,10 @@ export const DrugSearchScreen: React.FC<DrugSearchScreenProps> = ({ onSelectDrug
                   <div>
                     <div className="flex items-center justify-between">
                       <span className="text-xs font-semibold text-on-surface-variant uppercase tracking-wider font-mono">
-                        Lowest Cash Price
+                        {t('card.lowestCash')}
                       </span>
-                      <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800">
-                        Save {drug.typicalSavingsPercent}%
+                      <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300">
+                        {t('card.save')} {drug.typicalSavingsPercent}%
                       </span>
                     </div>
 
@@ -294,7 +314,7 @@ export const DrugSearchScreen: React.FC<DrugSearchScreenProps> = ({ onSelectDrug
                     </div>
 
                     <p className="text-[11px] text-on-surface-variant mt-0.5">
-                      at <strong className="text-on-surface">{bestQuote.pharmacyName}</strong> ({bestQuote.distance})
+                      {t('card.at')} <strong className="text-on-surface">{bestQuote.pharmacyName}</strong> ({bestQuote.distance})
                     </p>
                   </div>
 
@@ -304,7 +324,7 @@ export const DrugSearchScreen: React.FC<DrugSearchScreenProps> = ({ onSelectDrug
                       className="w-full py-2.5 px-4 rounded-lg bg-secondary text-white font-headline font-semibold text-xs tracking-wide hover:bg-secondary/90 transition-colors flex items-center justify-center gap-1.5 shadow-xs"
                     >
                       <span className="material-symbols-outlined text-[16px]">tune</span>
-                      <span>Configure Dose & Compare</span>
+                      <span>{t('card.configure')}</span>
                     </button>
 
                     <div className="flex items-center gap-2">
@@ -315,13 +335,13 @@ export const DrugSearchScreen: React.FC<DrugSearchScreenProps> = ({ onSelectDrug
                         }}
                         className="flex-1 py-1.5 px-2 rounded-lg bg-surface-container-lowest hover:bg-surface-container text-on-surface font-medium text-xs border border-outline-variant/30 transition-colors text-center"
                       >
-                        Digital Pass
+                        {t('card.digitalPass')}
                       </button>
                       <button
                         onClick={() => onNavigate('smart-routing')}
                         className="flex-1 py-1.5 px-2 rounded-lg bg-surface-container-lowest hover:bg-surface-container text-on-surface font-medium text-xs border border-outline-variant/30 transition-colors text-center"
                       >
-                        Split Route
+                        {t('card.splitRoute')}
                       </button>
                     </div>
                   </div>
@@ -334,3 +354,4 @@ export const DrugSearchScreen: React.FC<DrugSearchScreenProps> = ({ onSelectDrug
     </div>
   );
 };
+

@@ -1,6 +1,6 @@
 {
   "name": "PharmaCompare OS Engine",
-  "description": "Multi-tenant clinical pharmacy price comparison, algorithmic Rx routing, and teleconsultation platform.",
+  "description": "Multi-tenant clinical pharmacy price comparison, algorithmic Rx routing, biometric health vault, and senior citizen multilanguage accessibility platform.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

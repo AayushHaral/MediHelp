@@ -3,6 +3,7 @@ import { ScreenType, FamilyProfile } from '../../types';
 import { MOCK_FAMILY_PROFILES } from '../../data/mockData';
 import { BiometricSecurityModal, BiometricType } from '../BiometricSecurityModal';
 import { ThemeToggle } from '../ThemeToggle';
+import { useLanguage, SUPPORTED_LANGUAGES } from '../../context/LanguageContext';
 
 interface PatientProfileScreenProps {
   onNavigate: (screen: ScreenType) => void;
@@ -18,6 +19,7 @@ interface SecurityAuditLog {
 export const PatientProfileScreen: React.FC<PatientProfileScreenProps> = ({ onNavigate }) => {
   const [profiles] = useState<FamilyProfile[]>(MOCK_FAMILY_PROFILES);
   const [selectedProfileId, setSelectedProfileId] = useState<string>('prof-1');
+  const { language, setLanguage, textSize, setTextSize, isSeniorMode, toggleSeniorMode, t } = useLanguage();
 
   // Biometric Layer State
   const [isLocked, setIsLocked] = useState<boolean>(true);
@@ -767,6 +769,112 @@ export const PatientProfileScreen: React.FC<PatientProfileScreenProps> = ({ onNa
                     <span className="text-[10px] text-on-surface-variant block">Light, Dark, or System Match</span>
                   </div>
                   <ThemeToggle variant="segmented" />
+                </div>
+              </div>
+            </div>
+
+            {/* Senior Citizen & Multilanguage Preferences */}
+            <div className="pt-2 border-t border-outline-variant/15 space-y-2">
+              <span className="text-on-surface-variant block font-medium">Senior Care & Accessibility</span>
+              <div className="bg-surface-container-low p-3.5 rounded-xl border border-outline-variant/20 space-y-3.5">
+                {/* Senior Mode Toggle */}
+                <div className="flex items-center justify-between">
+                  <div>
+                    <span className="text-xs font-semibold text-on-surface flex items-center gap-1.5">
+                      <span className="material-symbols-outlined text-secondary text-base">elderly</span>
+                      <span>Senior Mode</span>
+                    </span>
+                    <span className="text-[10px] text-on-surface-variant block">
+                      Enlarged high-contrast text and audio reader
+                    </span>
+                  </div>
+                  <button
+                    type="button"
+                    role="switch"
+                    aria-checked={isSeniorMode}
+                    onClick={toggleSeniorMode}
+                    className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-secondary/40 ${
+                      isSeniorMode ? 'bg-secondary' : 'bg-surface-container-highest'
+                    }`}
+                  >
+                    <span className="sr-only">Toggle Senior Citizen Mode</span>
+                    <span
+                      className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-md ring-0 transition duration-200 ease-in-out flex items-center justify-center ${
+                        isSeniorMode ? 'translate-x-5 text-secondary' : 'translate-x-0 text-outline'
+                      }`}
+                    >
+                      <span className="material-symbols-outlined text-[11px] font-bold">
+                        {isSeniorMode ? 'check' : 'close'}
+                      </span>
+                    </span>
+                  </button>
+                </div>
+
+                {/* Font Scaling */}
+                <div className="flex items-center justify-between pt-1 border-t border-outline-variant/15">
+                  <span className="text-xs text-on-surface-variant">Text Scaling</span>
+                  <div className="flex items-center rounded-lg bg-surface-container p-0.5 border border-outline-variant/20">
+                    <button
+                      type="button"
+                      onClick={() => setTextSize('normal')}
+                      className={`px-2 py-0.5 rounded text-xs font-bold transition-colors ${
+                        textSize === 'normal'
+                          ? 'bg-secondary text-white'
+                          : 'text-on-surface-variant hover:text-on-surface'
+                      }`}
+                    >
+                      100%
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setTextSize('large')}
+                      className={`px-2 py-0.5 rounded text-xs font-bold transition-colors ${
+                        textSize === 'large'
+                          ? 'bg-secondary text-white'
+                          : 'text-on-surface-variant hover:text-on-surface'
+                      }`}
+                    >
+                      115%
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setTextSize('xlarge')}
+                      className={`px-2 py-0.5 rounded text-xs font-bold transition-colors ${
+                        textSize === 'xlarge'
+                          ? 'bg-secondary text-white'
+                          : 'text-on-surface-variant hover:text-on-surface'
+                      }`}
+                    >
+                      130%
+                    </button>
+                  </div>
+                </div>
+
+                {/* Language Select */}
+                <div className="pt-1 border-t border-outline-variant/15 space-y-1.5">
+                  <span className="text-xs text-on-surface-variant block">Active Language (6 Options)</span>
+                  <div className="grid grid-cols-2 gap-1.5">
+                    {SUPPORTED_LANGUAGES.map((lang) => {
+                      const isSelected = language === lang.code;
+                      return (
+                        <button
+                          key={lang.code}
+                          type="button"
+                          onClick={() => setLanguage(lang.code)}
+                          className={`px-2 py-1.5 rounded-lg text-left text-xs flex items-center gap-1.5 border transition-all ${
+                            isSelected
+                              ? 'bg-secondary/15 border-secondary text-secondary font-bold'
+                              : 'bg-surface-container border-outline-variant/20 text-on-surface hover:bg-surface-container-high'
+                          }`}
+                        >
+                          <span role="img" aria-label={lang.label}>
+                            {lang.flag}
+                          </span>
+                          <span className="truncate">{lang.nativeLabel.split(' ')[0]}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
                 </div>
               </div>
             </div>

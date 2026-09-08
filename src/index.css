@@ -66,6 +66,19 @@
   background-color: #f8f9ff;
   color: #0b1c30;
   color-scheme: light;
+  transition: font-size 0.2s ease;
+}
+
+html.text-size-large {
+  font-size: 114%;
+}
+
+html.text-size-xlarge {
+  font-size: 126%;
+}
+
+html.senior-mode-active {
+  letter-spacing: 0.01em;
 }
 
 html.dark,

@@ -2,6 +2,8 @@ import React from 'react';
 import { ScreenType } from '../types';
 import { ALL_SCREENS } from '../data/mockData';
 import { ThemeToggle } from './ThemeToggle';
+import { LanguageSelector } from './LanguageSelector';
+import { useLanguage } from '../context/LanguageContext';
 
 interface NavbarProps {
   currentScreen: ScreenType;
@@ -22,6 +24,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   onToggleEnterprise
 }) => {
   const currentMeta = ALL_SCREENS.find((s) => s.id === currentScreen) || ALL_SCREENS[0];
+  const { t, isSeniorMode, toggleSeniorMode } = useLanguage();
 
   return (
     <header className="sticky top-0 z-40 bg-surface-container-lowest/95 backdrop-blur-md border-b border-outline-variant/30 px-4 lg:px-8 py-3 transition-all">
@@ -44,14 +47,16 @@ export const Navbar: React.FC<NavbarProps> = ({
                   OS 3.4
                 </span>
               </div>
-              <p className="text-xs text-on-surface-variant font-medium">Algorithmic Rx Clearinghouse</p>
+              <p className="text-xs text-on-surface-variant font-medium">
+                {t('brand.tagline', 'Algorithmic Rx Clearinghouse')}
+              </p>
             </div>
           </button>
 
           {/* Location Badge */}
           <div className="hidden md:flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-container text-xs text-on-surface-variant font-medium border border-outline-variant/20">
             <span className="material-symbols-outlined text-[16px] text-secondary">location_on</span>
-            <span>SF Bay Area, CA</span>
+            <span>{t('nav.location', 'SF Bay Area, CA')}</span>
             <span className="font-mono text-on-surface font-semibold">{activeZip}</span>
           </div>
         </div>
@@ -64,8 +69,8 @@ export const Navbar: React.FC<NavbarProps> = ({
             title="Switch between all 13 application screens"
           >
             <span className="material-symbols-outlined text-[20px] text-secondary">grid_view</span>
-            <span className="hidden sm:inline">Explore All 13 Screens</span>
-            <span className="sm:hidden">Screens</span>
+            <span className="hidden sm:inline">{t('nav.screens', 'Explore All 13 Screens')}</span>
+            <span className="sm:hidden">{t('nav.screensShort', 'Screens')}</span>
             <span className="px-1.5 py-0.2 bg-primary-container text-primary-fixed rounded text-xs font-mono">13</span>
           </button>
 
@@ -79,7 +84,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                   : 'text-on-surface-variant hover:bg-surface-container'
               }`}
             >
-              Rx Search
+              {t('nav.rxSearch', 'Rx Search')}
             </button>
             <button
               onClick={() => onSelectScreen('smart-routing')}
@@ -89,7 +94,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                   : 'text-on-surface-variant hover:bg-surface-container'
               }`}
             >
-              Routing AI
+              {t('nav.routingAi', 'Routing AI')}
             </button>
             <button
               onClick={() => onSelectScreen('discount-card')}
@@ -99,7 +104,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                   : 'text-on-surface-variant hover:bg-surface-container'
               }`}
             >
-              Rx Pass Card
+              {t('nav.rxPass', 'Rx Pass Card')}
             </button>
             <button
               onClick={() => onSelectScreen('teleconsult')}
@@ -109,21 +114,40 @@ export const Navbar: React.FC<NavbarProps> = ({
                   : 'text-on-surface-variant hover:bg-surface-container'
               }`}
             >
-              Teleconsult MD
+              {t('nav.teleconsult', 'Teleconsult MD')}
             </button>
           </div>
         </div>
 
-        {/* Right Controls: Light/Dark Theme, Mode Toggle & Patient Profile */}
-        <div className="flex items-center gap-2 sm:gap-3">
+        {/* Right Controls: Senior Mode, Language, Light/Dark Theme, Mode Toggle & Patient Profile */}
+        <div className="flex items-center gap-2 sm:gap-2.5">
+          {/* Senior Citizen Mode Quick Toggle Button */}
+          <button
+            onClick={toggleSeniorMode}
+            className={`hidden sm:flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl text-xs font-semibold transition-all border shadow-xs ${
+              isSeniorMode
+                ? 'bg-secondary text-white border-secondary ring-1 ring-secondary'
+                : 'bg-surface-container hover:bg-surface-container-high text-on-surface border-outline-variant/30'
+            }`}
+            title="Toggle Senior Citizen Accessibility Mode (Large text & audio)"
+          >
+            <span className="material-symbols-outlined text-[17px]">
+              {isSeniorMode ? 'elderly' : 'accessibility_new'}
+            </span>
+            <span>{t('nav.seniorMode', 'Senior Mode')}</span>
+          </button>
+
+          {/* Multilanguage Selector */}
+          <LanguageSelector />
+
           {/* Light / Dark Mode Toggle */}
-          <ThemeToggle variant="pill" className="hidden sm:inline-block" />
-          <ThemeToggle variant="icon" className="sm:hidden" />
+          <ThemeToggle variant="pill" className="hidden lg:inline-block" />
+          <ThemeToggle variant="icon" className="lg:hidden" />
 
           {/* Mode Switcher */}
           <button
             onClick={onToggleEnterprise}
-            className={`hidden lg:flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all border ${
+            className={`hidden xl:flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all border ${
               isEnterpriseMode
                 ? 'bg-primary-container text-secondary-fixed border-secondary-fixed/40'
                 : 'bg-surface-container-low text-on-surface hover:bg-surface-container border-outline-variant/30'
@@ -132,7 +156,11 @@ export const Navbar: React.FC<NavbarProps> = ({
             <span className="material-symbols-outlined text-[16px]">
               {isEnterpriseMode ? 'admin_panel_settings' : 'storefront'}
             </span>
-            <span>{isEnterpriseMode ? 'Enterprise OS' : 'Consumer Mode'}</span>
+            <span>
+              {isEnterpriseMode
+                ? t('nav.enterpriseMode', 'Enterprise OS')
+                : t('nav.consumerMode', 'Consumer Mode')}
+            </span>
           </button>
 
           {/* Patient Card / Profile quick button */}

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { ScreenType, DrugItem, PharmacyQuote } from './types';
 import { MOCK_DRUGS } from './data/mockData';
 import { Navbar } from './components/Navbar';
+import { SeniorAssistanceBar } from './components/SeniorAssistanceBar';
 import { ScreenSwitcherModal } from './components/ScreenSwitcherModal';
 import { ScreenQuickBar } from './components/ScreenQuickBar';
 
@@ -59,6 +60,9 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-background text-on-surface flex flex-col font-body selection:bg-secondary-container selection:text-on-secondary-container">
+      {/* Senior Citizen Accessibility & Multilanguage Bar */}
+      <SeniorAssistanceBar />
+
       {/* Top Application Navbar */}
       <Navbar
         currentScreen={currentScreen}
