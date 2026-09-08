@@ -4,6 +4,7 @@ import { ALL_SCREENS } from '../data/mockData';
 import { ThemeToggle } from './ThemeToggle';
 import { LanguageSelector } from './LanguageSelector';
 import { useLanguage } from '../context/LanguageContext';
+import { useAuth } from '../context/AuthContext';
 
 interface NavbarProps {
   currentScreen: ScreenType;
@@ -25,6 +26,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 }) => {
   const currentMeta = ALL_SCREENS.find((s) => s.id === currentScreen) || ALL_SCREENS[0];
   const { t, isSeniorMode, toggleSeniorMode } = useLanguage();
+  const { currentUser, isLoggedIn } = useAuth();
 
   return (
     <header className="sticky top-0 z-40 bg-surface-container-lowest/95 backdrop-blur-md border-b border-outline-variant/30 px-4 lg:px-8 py-3 transition-all">
@@ -66,12 +68,12 @@ export const Navbar: React.FC<NavbarProps> = ({
           <button
             onClick={onOpenScreenModal}
             className="flex items-center gap-2 px-3.5 py-1.5 rounded-lg bg-surface-container-high hover:bg-surface-variant text-on-surface text-sm font-semibold transition-colors border border-outline-variant/30 shadow-xs"
-            title="Switch between all 13 application screens"
+            title={`Switch between all ${ALL_SCREENS.length} application screens`}
           >
             <span className="material-symbols-outlined text-[20px] text-secondary">grid_view</span>
-            <span className="hidden sm:inline">{t('nav.screens', 'Explore All 13 Screens')}</span>
+            <span className="hidden sm:inline">{t('nav.screens', `Explore All ${ALL_SCREENS.length} Screens`)}</span>
             <span className="sm:hidden">{t('nav.screensShort', 'Screens')}</span>
-            <span className="px-1.5 py-0.2 bg-primary-container text-primary-fixed rounded text-xs font-mono">13</span>
+            <span className="px-1.5 py-0.2 bg-primary-container text-primary-fixed rounded text-xs font-mono">{ALL_SCREENS.length}</span>
           </button>
 
           {/* Quick Shortcuts */}
@@ -163,19 +165,34 @@ export const Navbar: React.FC<NavbarProps> = ({
             </span>
           </button>
 
-          {/* Patient Card / Profile quick button */}
-          <button
-            onClick={() => onSelectScreen('patient-wallet')}
-            className="flex items-center gap-2 pl-2 pr-3 py-1 rounded-full bg-surface-container hover:bg-surface-container-high transition-colors border border-outline-variant/30"
-          >
-            <div className="w-7 h-7 rounded-full bg-secondary text-white font-semibold text-xs flex items-center justify-center">
-              SJ
-            </div>
-            <div className="text-left hidden sm:block">
-              <p className="text-xs font-semibold leading-tight text-on-surface">Sarah J.</p>
-              <p className="text-[10px] text-secondary font-mono leading-tight">BCBS Gold PPO</p>
-            </div>
-          </button>
+          {/* Patient Card / Auth button */}
+          {isLoggedIn && currentUser ? (
+            <button
+              onClick={() => onSelectScreen('auth')}
+              className="flex items-center gap-2 pl-2 pr-3 py-1 rounded-full bg-surface-container hover:bg-surface-container-high transition-colors border border-outline-variant/30"
+              title="View Account Profile & Session"
+            >
+              <div className="w-7 h-7 rounded-full bg-secondary text-white font-semibold text-xs flex items-center justify-center">
+                {currentUser.avatarInitials}
+              </div>
+              <div className="text-left hidden sm:block">
+                <p className="text-xs font-semibold leading-tight text-on-surface truncate max-w-[90px]">
+                  {currentUser.name.split(' ')[0]}
+                </p>
+                <p className="text-[10px] text-secondary font-mono leading-tight truncate max-w-[90px]">
+                  {currentUser.role === 'caregiver' ? 'Caregiver' : currentUser.insuranceName ? currentUser.insuranceName.split(' ')[0] : 'Member'}
+                </p>
+              </div>
+            </button>
+          ) : (
+            <button
+              onClick={() => onSelectScreen('auth')}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-secondary text-white text-xs font-semibold shadow-xs hover:bg-secondary/90 transition-colors"
+            >
+              <span className="material-symbols-outlined text-[16px]">lock</span>
+              <span>{t('auth.signIn', 'Sign In')}</span>
+            </button>
+          )}
         </div>
       </div>
 

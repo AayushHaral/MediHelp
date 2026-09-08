@@ -45,10 +45,10 @@ export const ScreenQuickBar: React.FC<ScreenQuickBarProps> = ({
       <button
         onClick={onOpenModal}
         className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-primary-container text-secondary-fixed text-xs font-headline font-bold hover:bg-primary transition-colors shrink-0 shadow-xs"
-        title="View all 13 screens directory"
+        title={`View all ${ALL_SCREENS.length} screens directory`}
       >
         <span className="material-symbols-outlined text-[16px]">grid_view</span>
-        <span>All 13</span>
+        <span>All {ALL_SCREENS.length}</span>
       </button>
     </div>
   );

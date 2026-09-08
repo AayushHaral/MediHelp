@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useState, useCallback } from 'react';
 
-export type LanguageCode = 'en' | 'es' | 'zh' | 'vi' | 'tl' | 'ko';
+export type LanguageCode = 'en' | 'es' | 'zh' | 'vi' | 'tl' | 'ko' | 'hi' | 'mr';
 export type TextSize = 'normal' | 'large' | 'xlarge';
 
 export interface LanguageOption {
@@ -36,6 +36,22 @@ export const SUPPORTED_LANGUAGES: LanguageOption[] = [
     flag: '🇨🇳',
     speechLocale: 'zh-CN',
     seniorGreeting: '长者长辈处方药省钱指南与无障碍服务'
+  },
+  {
+    code: 'hi',
+    label: 'Hindi',
+    nativeLabel: 'हिन्दी',
+    flag: '🇮🇳',
+    speechLocale: 'hi-IN',
+    seniorGreeting: 'वरिष्ठ नागरिक स्वास्थ्य एवं दवा बचत सहायता'
+  },
+  {
+    code: 'mr',
+    label: 'Marathi',
+    nativeLabel: 'मराठी',
+    flag: '🇮🇳',
+    speechLocale: 'mr-IN',
+    seniorGreeting: 'ज्येष्ठ नागरिक आरोग्य व औषध बचत सहाय्य'
   },
   {
     code: 'vi',
@@ -146,7 +162,37 @@ export const TRANSLATIONS: Record<LanguageCode, Record<string, string>> = {
     'modal.seniorTip3Title': '3. Show the Digital Pass to Any Cashier',
     'modal.seniorTip3Desc': 'Simply show your phone screen with the BIN, PCN, and Group numbers. The pharmacy technician enters it just like secondary insurance.',
     'modal.close': 'Close Guide',
-    'modal.callPharmacist': 'Call Senior Support (1-800-633-4227)'
+    'modal.callPharmacist': 'Call Senior Support (1-800-633-4227)',
+
+    // Auth Screen (Login & Registration)
+    'auth.title': 'Patient Portal Login & Registration',
+    'auth.signIn': 'Sign In',
+    'auth.signUp': 'Create Account',
+    'auth.emailOrPhone': 'Email address or Mobile phone',
+    'auth.password': 'Password',
+    'auth.confirmPassword': 'Confirm Password',
+    'auth.forgotPassword': 'Forgot password?',
+    'auth.rememberMe': 'Remember this device',
+    'auth.loginBtn': 'Sign In Securely',
+    'auth.registerBtn': 'Complete Patient Registration',
+    'auth.fullName': 'Full Legal Name',
+    'auth.phone': 'Phone Number',
+    'auth.dob': 'Date of Birth (MM/DD/YYYY)',
+    'auth.role': 'Account Role',
+    'auth.seniorEligible': 'Eligible for Senior Citizen & Medicare Part D Savings!',
+    'auth.dontHaveAccount': "Don't have an account? Sign up free",
+    'auth.alreadyHaveAccount': 'Already have an account? Sign in',
+    'auth.demoAccounts': 'Quick Demo 1-Click Accounts',
+    'auth.signOut': 'Sign Out',
+    'auth.loggedInAs': 'Signed in as',
+    'auth.guestMode': 'Guest Mode (Sign In)',
+    'auth.biometricLogin': 'Biometric Touch/Face ID Unlock',
+    'auth.otpLogin': 'One-Time Passcode (OTP) Login',
+    'auth.welcomeBack': 'Welcome Back to PharmaCompare',
+    'auth.createAccountDesc': 'Unlock personalized Rx discounts, family health wallet, and real-time refills.',
+    'auth.insuranceOptional': 'Insurance Card Details (Optional)',
+    'auth.skipInsurance': 'Skip insurance - I prefer cash discount prices',
+    'auth.hipaaConsent': 'I consent to HIPAA-compliant health record storage and prescription price monitoring.'
   },
 
   es: {
@@ -572,6 +618,236 @@ export const TRANSLATIONS: Record<LanguageCode, Record<string, string>> = {
     'modal.seniorTip3Desc': '화면에 적힌 BIN, PCN, Group 번호를 약사나 약국 직원에게 보여주시면 즉시 할인이 적용됩니다.',
     'modal.close': '안내창 닫기',
     'modal.callPharmacist': '어르신 전담 약사 연결 (1-800-633-4227)'
+  },
+
+  hi: {
+    // Brand & Navigation
+    'brand.name': 'PharmaCompare',
+    'brand.tagline': 'एल्गोरिद्मिक प्रिस्क्रिप्शन तुलना व वरिष्ठ नागरिक सेवा',
+    'nav.screens': 'सभी 14 स्क्रीन देखें',
+    'nav.screensShort': 'स्क्रीन',
+    'nav.rxSearch': 'दवा खोज',
+    'nav.routingAi': 'स्मार्ट रूटिंग',
+    'nav.rxPass': 'Rx डिस्काउंट पास',
+    'nav.teleconsult': 'डॉक्टर परामर्श',
+    'nav.consumerMode': 'ग्राहक मोड',
+    'nav.enterpriseMode': 'एंटरप्राइज OS',
+    'nav.seniorMode': 'वरिष्ठ नागरिक मोड',
+    'nav.seniorAssist': 'वरिष्ठ सहायता',
+    'nav.location': 'सैन फ्रांसिस्को / भारत',
+
+    // Senior Accessibility Bar
+    'senior.bannerTitle': 'वरिष्ठ नागरिक एवं मेडिकेयर सहायता केंद्र',
+    'senior.bannerSubtitle': 'बड़ा टेक्स्ट, स्पष्ट ऑडियो वाचन, मेडिकेयर पार्ट डी टिप्स और 24/7 फार्मासिस्ट सहायता।',
+    'senior.textSize': 'टेक्स्ट साइज़',
+    'senior.normalText': 'सामान्य',
+    'senior.largeText': 'बड़ा (115%)',
+    'senior.xlargeText': 'अति बड़ा (130%)',
+    'senior.voiceReader': 'सुनें (ऑडियो)',
+    'senior.voiceActive': 'पढ़ा जा रहा है...',
+    'senior.voiceStop': 'आवाज रोकें',
+    'senior.hotline': 'वरिष्ठ हेल्पलाइन: 1-800-MEDICARE',
+    'senior.pharmacistCall': 'फार्मासिस्ट से बात करें',
+    'senior.howItWorks': 'वरिष्ठ गाइड',
+    'senior.medicareNote': 'मेडिकेयर पार्ट डी, मेडिकेयर एडवांटेज या नकद छूट के साथ काम करता है।',
+
+    // Search & Drug Catalog
+    'search.badge': 'रियल-टाइम मल्टी-फार्मेसी क्लियरिंगहाउस',
+    'search.title': 'प्रिस्क्रिप्शन दवाओं की कीमतों की तुलना करें',
+    'search.pharmacyCount': '68,000+ फार्मेसी',
+    'search.subtitle': 'सीधे थोक मूल्य, निर्माता डिस्काउंट कार्ड और स्मार्ट स्प्लिट-प्रिस्क्रिप्शन रूटिंग।',
+    'search.placeholder': 'दवा का नाम खोजें (उदा. Atorvastatin, Ozempic, Metformin, Lisinopril, Eliquis)...',
+    'search.btn': 'बचत खोजें',
+    'search.trending': 'वरिष्ठों में लोकप्रिय:',
+    'search.filter': 'फ़िल्टर:',
+    'search.allMeds': 'सभी दवाएं',
+    'search.genericOnly': 'जेनेरिक विकल्प',
+    'search.fastPickup': '15 मिनट में तैयार',
+    'search.mailOrder': 'मुफ़्त होम डिलीवरी',
+    'search.classLabel': 'दवा वर्ग:',
+    'search.allClasses': 'सभी वर्ग',
+    'search.showing': 'दिखाया जा रहा है',
+    'search.matchingMeds': 'मिलने वाली दवाएं',
+    'search.pricesCalibrated': 'कीमतें स्थान:',
+    'search.optimizeCart': 'मल्टी-दवा कार्ट ऑप्टिमाइज़ करें',
+
+    // Drug Card
+    'card.lowestCash': 'न्यूनतम नकद मूल्य',
+    'card.save': 'बचत',
+    'card.genericAvailable': 'जेनेरिक उपलब्ध',
+    'card.brandExclusive': 'केवल ब्रांड उपलब्ध',
+    'card.genericFor': 'जेनेरिक रूप',
+    'card.standard': 'मानक खुराक:',
+    'card.form': 'प्रकार:',
+    'card.qty': 'मात्रा:',
+    'card.at': 'पर',
+    'card.configure': 'खुराक चुनें और तुलना करें',
+    'card.digitalPass': 'डिजिटल पास',
+    'card.splitRoute': 'स्प्लिट रूट',
+    'card.listen': 'दवा की जानकारी सुनें',
+    'card.audioDescription': 'प्रिस्क्रिप्शन विवरण',
+
+    // Stock Status
+    'stock.ready15': '15 मिनट में तैयार',
+    'stock.inStock': 'स्टॉक में उपलब्ध',
+    'stock.mailOrder': '2 दिन में मुफ़्त डिलीवरी',
+    'stock.specialOrder': 'विशेष ऑर्डर',
+
+    // Senior Modal
+    'modal.seniorGuideTitle': 'वरिष्ठ नागरिक दवा बचत व मेडिकेयर गाइड',
+    'modal.seniorTip1Title': '1. जब नकद मूल्य मेडिकेयर कोपेय से कम होता है',
+    'modal.seniorTip1Desc': 'कई जेनेरिक दवाएं (जैसे Atorvastatin, Metformin) हमारे डिस्काउंट कार्ड से मात्र $8-$12 में उपलब्ध हैं, जो बीमा कटौती से सस्ती होती हैं।',
+    'modal.seniorTip2Title': '2. पुरानी बीमारियों की दवाएं सीधे घर पर डिलीवरी',
+    'modal.seniorTip2Desc': 'फार्मेसी जाने की आवश्यकता नहीं। तापमान-नियंत्रित सुरक्षित पैकेजिंग के साथ 90 दिन की दवाएं मुफ़्त घर पहुंचाई जाती हैं।',
+    'modal.seniorTip3Title': '3. किसी भी फार्मेसी कैशियर को डिजिटल पास दिखाएं',
+    'modal.seniorTip3Desc': 'अपने फोन पर BIN, PCN और Group नंबर दिखाएं। फार्मेसी स्टाफ तुरंत छूट लागू कर देगा।',
+    'modal.close': 'गाइड बंद करें',
+    'modal.callPharmacist': 'वरिष्ठ सहायता कॉल करें (1-800-633-4227)',
+
+    // Auth Screen (Login & Registration)
+    'auth.title': 'पेशेंट पोर्टल लॉगिन एवं पंजीकरण',
+    'auth.signIn': 'साइन इन करें',
+    'auth.signUp': 'नया खाता बनाएं',
+    'auth.emailOrPhone': 'ईमेल पता या मोबाइल नंबर',
+    'auth.password': 'पासवर्ड',
+    'auth.confirmPassword': 'पासवर्ड की पुष्टि करें',
+    'auth.forgotPassword': 'पासवर्ड भूल गए?',
+    'auth.rememberMe': 'इस डिवाइस पर याद रखें',
+    'auth.loginBtn': 'सुरक्षित लॉगिन करें',
+    'auth.registerBtn': 'पंजीकरण पूरा करें',
+    'auth.fullName': 'पूरा कानूनी नाम',
+    'auth.phone': 'मोबाइल नंबर',
+    'auth.dob': 'जन्म तिथि (दिन/माह/वर्ष)',
+    'auth.role': 'खाता भूमिका',
+    'auth.seniorEligible': 'वरिष्ठ नागरिक एवं मेडिकेयर पार्ट डी बचत के लिए पात्र!',
+    'auth.dontHaveAccount': 'खाता नहीं है? निःशुल्क पंजीकरण करें',
+    'auth.alreadyHaveAccount': 'पहले से खाता है? साइन इन करें',
+    'auth.demoAccounts': 'त्वरित 1-क्लिक टेस्ट खाते',
+    'auth.signOut': 'लॉग आउट',
+    'auth.loggedInAs': 'सत्यापित उपयोगकर्ता:',
+    'auth.guestMode': 'अतिथि मोड (साइन इन करें)',
+    'auth.biometricLogin': 'बायोमेट्रिक फिंगरप्रिंट / फेस आईडी अनलॉक',
+    'auth.otpLogin': 'OTP द्वारा त्वरित लॉगिन',
+    'auth.welcomeBack': 'PharmaCompare में पुनः स्वागत है',
+    'auth.createAccountDesc': 'दवा बचत, डिजिटल वॉलेट और स्वचालित रिफिल सुविधा का लाभ उठाएं।',
+    'auth.insuranceOptional': 'बीमा कार्ड विवरण (वैकल्पिक)',
+    'auth.skipInsurance': 'बीमा छोड़ें - मैं नकद छूट पसंद करता हूं',
+    'auth.hipaaConsent': 'मैं HIPAA स्वास्थ्य गोपनीयता नियमों और दवा मूल्य ट्रैकिंग से सहमत हूं।'
+  },
+
+  mr: {
+    // Brand & Navigation
+    'brand.name': 'PharmaCompare',
+    'brand.tagline': 'अल्गोरिदम आधारित औषध किंमत तुलना व ज्येष्ठ नागरिक सेवा',
+    'nav.screens': 'सर्व 14 स्क्रीन्स पहा',
+    'nav.screensShort': 'स्क्रीन्स',
+    'nav.rxSearch': 'औषध शोध',
+    'nav.routingAi': 'स्मार्ट रूटिंग',
+    'nav.rxPass': 'Rx सवलत पास',
+    'nav.teleconsult': 'डॉक्टर सल्ला',
+    'nav.consumerMode': 'ग्राहक मोड',
+    'nav.enterpriseMode': 'एंटरप्राइज OS',
+    'nav.seniorMode': 'ज्येष्ठ नागरिक मोड',
+    'nav.seniorAssist': 'ज्येष्ठ मदत',
+    'nav.location': 'मुंबई / पुणे',
+
+    // Senior Accessibility Bar
+    'senior.bannerTitle': 'ज्येष्ठ नागरिक व मेडिकेयर सहाय्यता केंद्र',
+    'senior.bannerSubtitle': 'मोठा फॉन्ट, स्पष्ट ऑडिओ वाचन, मेडिकेयर पार्ट डी मार्गदर्शन आणि 24/7 फार्मासिस्ट मदत.',
+    'senior.textSize': 'फॉन्ट आकार',
+    'senior.normalText': 'सामान्य',
+    'senior.largeText': 'मोठा (115%)',
+    'senior.xlargeText': 'अति मोठा (130%)',
+    'senior.voiceReader': 'मोठ्याने ऐका',
+    'senior.voiceActive': 'वाचले जात आहे...',
+    'senior.voiceStop': 'आवाज थांबवा',
+    'senior.hotline': 'ज्येष्ठ हेल्पलाइन: 1-800-MEDICARE',
+    'senior.pharmacistCall': 'फार्मासिस्टशी बोला',
+    'senior.howItWorks': 'ज्येष्ठ मार्गदर्शिका',
+    'senior.medicareNote': 'मेडिकेयर पार्ट डी, विमा किंवा थेट रोख सवलतीसह सहज वापरता येते.',
+
+    // Search & Drug Catalog
+    'search.badge': 'रिअल-टाइम मल्टी-फार्मसी किंमत प्रणाली',
+    'search.title': 'प्रिस्क्रिप्शन औषधांच्या दरांची तुलना करा',
+    'search.pharmacyCount': '68,000+ फार्मसी',
+    'search.subtitle': 'थेट घाऊक दर, सवलत कार्ड आणि आपोआप स्प्लिट-प्रिस्क्रिप्शन रूटिंग.',
+    'search.placeholder': 'औषधाचे नाव शोधा (उदा. Atorvastatin, Ozempic, Metformin, Lisinopril, Eliquis)...',
+    'search.btn': 'सवलत शोधा',
+    'search.trending': 'ज्येष्ठांसाठी लोकप्रिय:',
+    'search.filter': 'फिल्टर:',
+    'search.allMeds': 'सर्व औषधे',
+    'search.genericOnly': 'जेनेरिक पर्याय',
+    'search.fastPickup': '15 मिनिटांत तयार',
+    'search.mailOrder': 'मोफत होम डिलिव्हरी',
+    'search.classLabel': 'औषध वर्ग:',
+    'search.allClasses': 'सर्व वर्ग',
+    'search.showing': 'दाखवत आहे',
+    'search.matchingMeds': 'औषधे सापडली',
+    'search.pricesCalibrated': 'किंमती स्थान:',
+    'search.optimizeCart': 'मल्टी-औषध कार्ट ऑप्टिमाइझ करा',
+
+    // Drug Card
+    'card.lowestCash': 'सर्वात कमी रोख दर',
+    'card.save': 'बचत',
+    'card.genericAvailable': 'जेनेरिक उपलब्ध',
+    'card.brandExclusive': 'फक्त ब्रँड उपलब्ध',
+    'card.genericFor': 'जेनेरिक रूप',
+    'card.standard': 'प्रमाणित डोस:',
+    'card.form': 'प्रकार:',
+    'card.qty': 'प्रमाण:',
+    'card.at': 'येथे',
+    'card.configure': 'डोस निवडा आणि तुलना करा',
+    'card.digitalPass': 'डिजिटल पास',
+    'card.splitRoute': 'स्प्लिट रूट',
+    'card.listen': 'औषधाची माहिती ऐका',
+    'card.audioDescription': 'प्रिस्क्रिप्शन तपशील',
+
+    // Stock Status
+    'stock.ready15': '15 मिनिटांत तयार',
+    'stock.inStock': 'स्टॉकमध्ये उपलब्ध',
+    'stock.mailOrder': '2 दिवसांत मोफत डिलिव्हरी',
+    'stock.specialOrder': 'विशेष ऑर्डर',
+
+    // Senior Modal
+    'modal.seniorGuideTitle': 'ज्येष्ठ नागरिक औषध बचत व मेडिकेयर माहिती',
+    'modal.seniorTip1Title': '1. रोख सवलत विमा कोपेयपेक्षा स्वस्त असते',
+    'modal.seniorTip1Desc': 'अनेक जेनेरिक औषधे (उदा. Atorvastatin, Metformin) आमच्या कार्डने फक्त $8-$12 मध्ये मिळतात, जे विम्याच्या डिडक्टिबलपेक्षा खूप फायदेशीर आहेत.',
+    'modal.seniorTip2Title': '2. नियमित औषधे घरपोच मोफत डिलिव्हरी',
+    'modal.seniorTip2Desc': 'फार्मसीत रांगेत उभे राहण्याची गरज नाही. 90 दिवसांचा साठा थेट आपल्या घरी मोफत पाठवला जातो.',
+    'modal.seniorTip3Title': '3. कोणत्याही फार्मसीमध्ये डिजिटल पास दाखवा',
+    'modal.seniorTip3Desc': 'आपल्या मोबाइलवरील BIN, PCN आणि Group क्रमांक दाखवा. फार्मसी लगेच सवलत लागू करेल.',
+    'modal.close': 'मार्गदर्शिका बंद करा',
+    'modal.callPharmacist': 'ज्येष्ठ मदत संपर्क (1-800-633-4227)',
+
+    // Auth Screen (Login & Registration)
+    'auth.title': 'पेशंट पोर्टल लॉगिन आणि नोंदणी',
+    'auth.signIn': 'साइन इन',
+    'auth.signUp': 'नवीन खाते तयार करा',
+    'auth.emailOrPhone': 'ईमेल पत्ता किंवा मोबाइल नंबर',
+    'auth.password': 'पासवर्ड',
+    'auth.confirmPassword': 'पासवर्डची पुष्टी करा',
+    'auth.forgotPassword': 'पासवर्ड विसरलात?',
+    'auth.rememberMe': 'माझी नोंद ठेवा',
+    'auth.loginBtn': 'सुरक्षित लॉगिन करा',
+    'auth.registerBtn': 'नोंदणी पूर्ण करा',
+    'auth.fullName': 'पूर्ण कायदेशीर नाव',
+    'auth.phone': 'मोबाइल नंबर',
+    'auth.dob': 'जन्मतारीख (दिवस/महिना/वर्ष)',
+    'auth.role': 'खाते भूमिका',
+    'auth.seniorEligible': 'ज्येष्ठ नागरिक बचत आणि मेडिकेयर सवलतीसाठी पात्र!',
+    'auth.dontHaveAccount': 'खाते नाही? विनामूल्य नोंदणी करा',
+    'auth.alreadyHaveAccount': 'आधीच खाते आहे? साइन इन करा',
+    'auth.demoAccounts': 'त्वरित 1-क्लिक चाचणी खाती',
+    'auth.signOut': 'लॉग आउट',
+    'auth.loggedInAs': 'सत्यापित वापरकर्ता:',
+    'auth.guestMode': 'अतिथी मोड (साइन इन करा)',
+    'auth.biometricLogin': 'बायोमेट्रिक फिंगरप्रिंट / फेस अनलॉक',
+    'auth.otpLogin': 'OTP द्वारे लॉगिन',
+    'auth.welcomeBack': 'PharmaCompare मध्ये पुन्हा स्वागत आहे',
+    'auth.createAccountDesc': 'औषध सवलत, कुटुंब आरोग्य वॉलेट आणि ऑटो-रिफिल सेवेचा लाभ घ्या.',
+    'auth.insuranceOptional': 'विमा कार्ड तपशील (पर्यायी)',
+    'auth.skipInsurance': 'विमा वगळा - मला थेट रोख सवलत हवी आहे',
+    'auth.hipaaConsent': 'मी HIPAA आरोग्य गोपनीयता नियम आणि औषध किंमत ट्रॅकिंग मान्य करतो.'
   }
 };
 
@@ -601,12 +877,14 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const [language, setLanguageState] = useState<LanguageCode>(() => {
     try {
       const saved = localStorage.getItem(LANG_STORAGE_KEY);
-      if (saved && ['en', 'es', 'zh', 'vi', 'tl', 'ko'].includes(saved)) {
+      if (saved && ['en', 'es', 'zh', 'vi', 'tl', 'ko', 'hi', 'mr'].includes(saved)) {
         return saved as LanguageCode;
       }
       // Auto detect user browser language
       if (typeof navigator !== 'undefined' && navigator.language) {
         const navLang = navigator.language.toLowerCase();
+        if (navLang.startsWith('hi')) return 'hi';
+        if (navLang.startsWith('mr')) return 'mr';
         if (navLang.startsWith('es')) return 'es';
         if (navLang.startsWith('zh')) return 'zh';
         if (navLang.startsWith('vi')) return 'vi';

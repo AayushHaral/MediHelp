@@ -32,11 +32,11 @@ export const ScreenSwitcherModal: React.FC<ScreenSwitcherModalProps> = ({
               <span className="material-symbols-outlined text-secondary text-2xl">grid_view</span>
               <h2 className="font-headline font-bold text-xl text-on-surface">Application Screen Directory</h2>
               <span className="px-2 py-0.5 rounded-full text-xs font-mono font-semibold bg-secondary text-white">
-                13 Full Screens
+                {ALL_SCREENS.length} Full Screens
               </span>
             </div>
             <p className="text-xs text-on-surface-variant mt-1">
-              Select any screen from the 13 clinical workflows to preview, test, and interact with live state.
+              Select any screen from the {ALL_SCREENS.length} clinical workflows to preview, test, and interact with live state.
             </p>
           </div>
           <button

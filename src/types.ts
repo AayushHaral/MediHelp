@@ -11,7 +11,8 @@ export type ScreenType =
   | 'delivery-tracking'
   | 'interaction-checker'
   | 'price-alerts'
-  | 'patient-wallet';
+  | 'patient-wallet'
+  | 'auth';
 
 export interface ScreenMetadata {
   id: ScreenType;
@@ -167,4 +168,17 @@ export interface FamilyProfile {
     memberId: string;
     status: 'Verified' | 'Pending';
   };
+}
+
+export interface AuthUser {
+  id: string;
+  name: string;
+  email: string;
+  phone?: string;
+  dob?: string;
+  role: 'patient' | 'caregiver' | 'clinician' | 'pharmacy';
+  insuranceName?: string;
+  memberId?: string;
+  isSeniorEligible?: boolean;
+  avatarInitials: string;
 }

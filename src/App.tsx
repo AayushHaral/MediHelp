@@ -20,6 +20,7 @@ import { DeliveryTrackingScreen } from './components/screens/DeliveryTrackingScr
 import { InteractionCheckerScreen } from './components/screens/InteractionCheckerScreen';
 import { PriceAlertsScreen } from './components/screens/PriceAlertsScreen';
 import { PatientProfileScreen } from './components/screens/PatientProfileScreen';
+import { AuthScreen } from './components/screens/AuthScreen';
 
 export default function App() {
   const [currentScreen, setCurrentScreen] = useState<ScreenType>('catalog');
@@ -141,6 +142,10 @@ export default function App() {
 
         {currentScreen === 'patient-wallet' && (
           <PatientProfileScreen onNavigate={setCurrentScreen} />
+        )}
+
+        {currentScreen === 'auth' && (
+          <AuthScreen onNavigate={setCurrentScreen} />
         )}
       </main>
 

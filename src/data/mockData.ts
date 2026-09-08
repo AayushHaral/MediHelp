@@ -1,4 +1,4 @@
-import { DrugItem, TeleconsultDoctor, TransferRequest, DrugInteraction, AdherenceDose, PriceAlert, FamilyProfile, RoutingPlan, ScreenMetadata } from '../types';
+import { DrugItem, TeleconsultDoctor, TransferRequest, DrugInteraction, AdherenceDose, PriceAlert, FamilyProfile, RoutingPlan, ScreenMetadata, AuthUser } from '../types';
 
 export const ALL_SCREENS: ScreenMetadata[] = [
   {
@@ -96,6 +96,14 @@ export const ALL_SCREENS: ScreenMetadata[] = [
     icon: 'domain',
     category: 'Operations & Wallet',
     badge: 'Enterprise'
+  },
+  {
+    id: 'auth',
+    title: 'Patient Portal Login & Registration',
+    subtitle: 'Secure HIPAA authentication, caregiver proxy & member signup',
+    icon: 'lock',
+    category: 'Operations & Wallet',
+    badge: 'Security'
   }
 ];
 
@@ -808,3 +816,43 @@ export const MOCK_FAMILY_PROFILES: FamilyProfile[] = [
     }
   }
 ];
+
+export const DEFAULT_AUTH_USERS: AuthUser[] = [
+  {
+    id: 'user-1',
+    name: 'Sarah Jenkins',
+    email: 'sarah.jenkins@healthmail.com',
+    phone: '(415) 555-0192',
+    dob: '1988-05-14',
+    role: 'patient',
+    insuranceName: 'Blue Cross Blue Shield Gold PPO',
+    memberId: 'BCBS-8492048-01',
+    isSeniorEligible: false,
+    avatarInitials: 'SJ'
+  },
+  {
+    id: 'user-2',
+    name: 'Eleanor Vance',
+    email: 'eleanor.vance1952@gmail.com',
+    phone: '(415) 555-0481',
+    dob: '1952-11-03',
+    role: 'caregiver',
+    insuranceName: 'Humana Medicare Advantage Part D',
+    memberId: 'HUM-9041289-01',
+    isSeniorEligible: true,
+    avatarInitials: 'EV'
+  },
+  {
+    id: 'user-3',
+    name: 'Dr. Elena Rostova',
+    email: 'dr.rostova@telehealthrx.org',
+    phone: '(415) 555-0723',
+    dob: '1982-03-29',
+    role: 'clinician',
+    insuranceName: 'NPI #1942859012 (DEA Active)',
+    memberId: 'MD-CAL-84920',
+    isSeniorEligible: false,
+    avatarInitials: 'ER'
+  }
+];
+
