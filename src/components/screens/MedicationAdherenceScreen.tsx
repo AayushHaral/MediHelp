@@ -1,30 +1,36 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ScreenType, AdherenceDose } from '../../types';
-import { MOCK_ADHERENCE } from '../../data/mockData';
+import { getStoredAdherenceDoses, toggleDoseTaken } from '../../services/dbService';
+import { sendMedicationSmsReminder } from '../../services/reminderService';
 
 interface MedicationAdherenceScreenProps {
   onNavigate: (screen: ScreenType) => void;
 }
 
 export const MedicationAdherenceScreen: React.FC<MedicationAdherenceScreenProps> = ({ onNavigate }) => {
-  const [doses, setDoses] = useState<AdherenceDose[]>(MOCK_ADHERENCE);
-  const [streakDays, setStreakDays] = useState(14);
+  const [doses, setDoses] = useState<AdherenceDose[]>([]);
+  const [streakDays] = useState(14);
+  const [smsNotificationMsg, setSmsNotificationMsg] = useState<string | null>(null);
+
+  useEffect(() => {
+    setDoses(getStoredAdherenceDoses());
+  }, []);
 
   const handleToggleTaken = (id: string) => {
-    setDoses((prev) =>
-      prev.map((d) => {
-        if (d.id === id) {
-          const newTaken = !d.taken;
-          return {
-            ...d,
-            taken: newTaken,
-            takenAt: newTaken ? 'Just now' : undefined,
-            remainingPills: newTaken ? Math.max(0, d.remainingPills - 1) : d.remainingPills + 1
-          };
-        }
-        return d;
-      })
-    );
+    const updated = toggleDoseTaken(id);
+    setDoses(updated);
+  };
+
+  const handleSendSmsReminder = async (dose: AdherenceDose) => {
+    setSmsNotificationMsg(null);
+    const res = await sendMedicationSmsReminder({
+      recipientPhone: '+1 (555) 019-2834',
+      drugName: dose.drugName,
+      scheduledTime: dose.scheduledTime,
+      dosageInstructions: dose.instructions,
+    });
+    setSmsNotificationMsg(`SMS Alert ${res.deliveryStatus.toUpperCase()}! Reminder sent for ${dose.drugName} at ${dose.scheduledTime}.`);
+    setTimeout(() => setSmsNotificationMsg(null), 5000);
   };
 
   const takenCount = doses.filter((d) => d.taken).length;
@@ -74,6 +80,13 @@ export const MedicationAdherenceScreen: React.FC<MedicationAdherenceScreenProps>
           />
         </div>
       </div>
+
+      {smsNotificationMsg && (
+        <div className="p-3 rounded-xl bg-teal-100 dark:bg-teal-950/60 border border-teal-300 dark:border-teal-800 text-xs text-teal-900 dark:text-teal-200 flex items-center gap-2 animate-fade-in">
+          <span className="material-symbols-outlined text-teal-600 text-base">sms</span>
+          <span>{smsNotificationMsg}</span>
+        </div>
+      )}
 
       {/* Dosing Timeline Cards */}
       <div className="space-y-3">
@@ -143,7 +156,16 @@ export const MedicationAdherenceScreen: React.FC<MedicationAdherenceScreenProps>
               </div>
 
               {/* Action */}
-              <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
+              <div className="flex items-center gap-2 w-full sm:w-auto justify-end flex-wrap">
+                <button
+                  onClick={() => handleSendSmsReminder(dose)}
+                  className="px-2.5 py-1.5 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface font-semibold text-xs transition-colors flex items-center gap-1 border border-outline-variant/30"
+                  title="Send SMS reminder alert to patient phone"
+                >
+                  <span className="material-symbols-outlined text-[15px] text-teal-600">sms</span>
+                  <span>SMS Alert</span>
+                </button>
+
                 {dose.refillDaysLeft <= 7 && (
                   <button
                     onClick={() => onNavigate('smart-routing')}

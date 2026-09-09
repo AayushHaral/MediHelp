@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { ScreenType, FamilyProfile } from '../../types';
 import { MOCK_FAMILY_PROFILES } from '../../data/mockData';
 import { BiometricSecurityModal, BiometricType } from '../BiometricSecurityModal';
 import { ThemeToggle } from '../ThemeToggle';
 import { useLanguage, SUPPORTED_LANGUAGES } from '../../context/LanguageContext';
+import { scanInsuranceCardWithAI } from '../../services/geminiService';
+import { getAuditLogs, recordAuditEvent, AuditEventLog } from '../../services/securityAuditService';
 
 interface PatientProfileScreenProps {
   onNavigate: (screen: ScreenType) => void;
@@ -17,9 +19,14 @@ interface SecurityAuditLog {
 }
 
 export const PatientProfileScreen: React.FC<PatientProfileScreenProps> = ({ onNavigate }) => {
-  const [profiles] = useState<FamilyProfile[]>(MOCK_FAMILY_PROFILES);
+  const [profiles, setProfiles] = useState<FamilyProfile[]>(MOCK_FAMILY_PROFILES);
   const [selectedProfileId, setSelectedProfileId] = useState<string>('prof-1');
   const { language, setLanguage, textSize, setTextSize, isSeniorMode, toggleSeniorMode, t } = useLanguage();
+
+  // OCR & Gemini Vision State
+  const [isScanningOcr, setIsScanningOcr] = useState<boolean>(false);
+  const [ocrSuccessMsg, setOcrSuccessMsg] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   // Biometric Layer State
   const [isLocked, setIsLocked] = useState<boolean>(true);
@@ -30,20 +37,7 @@ export const PatientProfileScreen: React.FC<PatientProfileScreenProps> = ({ onNa
   const [requireBiometrics, setRequireBiometrics] = useState<boolean>(true);
   const [copiedField, setCopiedField] = useState<string | null>(null);
   const [showAuditTrail, setShowAuditTrail] = useState<boolean>(false);
-  const [auditLogs, setAuditLogs] = useState<SecurityAuditLog[]>([
-    {
-      id: 'log-1',
-      timestamp: 'Today, 23:30:15',
-      event: 'Vault auto-locked due to inactive session (HIPAA 45 CFR § 164.312)',
-      status: 'locked'
-    },
-    {
-      id: 'log-2',
-      timestamp: 'Today, 23:18:42',
-      event: 'Hardware Enclave FIDO2 cryptographic challenge issued',
-      status: 'verified'
-    }
-  ]);
+  const [auditLogs, setAuditLogs] = useState<AuditEventLog[]>(getAuditLogs());
 
   const currentProfile = profiles.find((p) => p.id === selectedProfileId) || profiles[0];
   const isProtected = requireBiometrics && isLocked;
@@ -56,15 +50,8 @@ export const PatientProfileScreen: React.FC<PatientProfileScreenProps> = ({ onNa
       setAutoLockSeconds((prev) => {
         if (prev <= 1) {
           setIsLocked(true);
-          setAuditLogs((logs) => [
-            {
-              id: `log-${Date.now()}`,
-              timestamp: 'Just now',
-              event: 'Auto-locked after inactivity timeout (Protected Clinical Records)',
-              status: 'locked'
-            },
-            ...logs
-          ]);
+          const updated = recordAuditEvent('Auto-locked after inactivity timeout (Protected PHI Vault)', 'locked');
+          setAuditLogs(updated);
           return 180;
         }
         return prev - 1;
@@ -79,28 +66,84 @@ export const PatientProfileScreen: React.FC<PatientProfileScreenProps> = ({ onNa
     setIsLocked(false);
     setLastAuthMethod(method);
     setAutoLockSeconds(180);
-    setAuditLogs((prev) => [
-      {
-        id: `log-${Date.now()}`,
-        timestamp: 'Just now',
-        event: `Biometric authentication verified via ${method}`,
-        status: 'verified'
-      },
-      ...prev
-    ]);
+    const updated = recordAuditEvent(`Biometric authentication challenge passed via ${method}`, 'verified');
+    setAuditLogs(updated);
   };
 
   const handleManualLock = () => {
     setIsLocked(true);
-    setAuditLogs((prev) => [
-      {
-        id: `log-${Date.now()}`,
-        timestamp: 'Just now',
-        event: 'Manual security lock triggered by user',
-        status: 'locked'
-      },
-      ...prev
-    ]);
+    const updated = recordAuditEvent('Manual security vault lock requested by user', 'locked');
+    setAuditLogs(updated);
+  };
+
+  const handleFileUploadAndOcr = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setIsScanningOcr(true);
+    setOcrSuccessMsg(null);
+
+    const reader = new FileReader();
+    reader.onload = async () => {
+      const base64 = reader.result as string;
+      const extracted = await scanInsuranceCardWithAI(base64, file.type);
+
+      setProfiles((prevProfiles) =>
+        prevProfiles.map((p) => {
+          if (p.id === selectedProfileId) {
+            return {
+              ...p,
+              insuranceCard: {
+                ...p.insuranceCard,
+                payerName: extracted.payerName,
+                rxBin: extracted.rxBin,
+                rxPcn: extracted.rxPcn,
+                rxGroup: extracted.rxGroup,
+                memberId: extracted.memberId,
+                status: 'Verified',
+              },
+            };
+          }
+          return p;
+        })
+      );
+
+      setIsScanningOcr(false);
+      setOcrSuccessMsg(`Successfully scanned insurance card via Gemini AI! BIN: ${extracted.rxBin}, PCN: ${extracted.rxPcn}`);
+      setTimeout(() => setOcrSuccessMsg(null), 6000);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleSimulatedOcrScan = async () => {
+    setIsScanningOcr(true);
+    setOcrSuccessMsg(null);
+    const dummyBase64 = 'data:image/jpeg;base64,/9j/4AAQSkZJRg...';
+    const extracted = await scanInsuranceCardWithAI(dummyBase64);
+
+    setProfiles((prevProfiles) =>
+      prevProfiles.map((p) => {
+        if (p.id === selectedProfileId) {
+          return {
+            ...p,
+            insuranceCard: {
+              ...p.insuranceCard,
+              payerName: extracted.payerName,
+              rxBin: extracted.rxBin,
+              rxPcn: extracted.rxPcn,
+              rxGroup: extracted.rxGroup,
+              memberId: extracted.memberId,
+              status: 'Verified',
+            },
+          };
+        }
+        return p;
+      })
+    );
+
+    setIsScanningOcr(false);
+    setOcrSuccessMsg(`Simulated AI OCR Scan Complete! Updated BIN: ${extracted.rxBin}, PCN: ${extracted.rxPcn}`);
+    setTimeout(() => setOcrSuccessMsg(null), 6000);
   };
 
   const handleToggleBiometrics = () => {
@@ -484,28 +527,47 @@ export const PatientProfileScreen: React.FC<PatientProfileScreenProps> = ({ onNa
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Insurance Card Visual (7 cols) */}
         <div className="lg:col-span-7 space-y-4">
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between flex-wrap gap-2">
             <h3 className="font-headline font-bold text-sm text-on-surface flex items-center gap-1.5">
               <span className="material-symbols-outlined text-secondary text-base">badge</span>
               Primary Insurance Benefit Card
             </h3>
-            {!requireBiometrics ? (
-              <span className="text-[11px] font-mono text-on-surface-variant font-semibold flex items-center gap-1">
-                <span className="material-symbols-outlined text-[14px]">lock_open_right</span>
-                Standard View
-              </span>
-            ) : isProtected ? (
-              <span className="text-[11px] font-mono text-amber-700 font-semibold flex items-center gap-1">
-                <span className="material-symbols-outlined text-[14px]">lock</span>
-                Routing Numbers Masked
-              </span>
-            ) : (
-              <span className="text-[11px] font-mono text-emerald-700 font-semibold flex items-center gap-1">
-                <span className="material-symbols-outlined text-[14px]">verified</span>
-                Decrypted via Biometrics
-              </span>
-            )}
+
+            <div className="flex items-center gap-2">
+              <input
+                type="file"
+                ref={fileInputRef}
+                onChange={handleFileUploadAndOcr}
+                accept="image/*"
+                className="hidden"
+              />
+
+              <button
+                onClick={() => fileInputRef.current?.click()}
+                disabled={isScanningOcr}
+                className="px-2.5 py-1 rounded-lg bg-teal-600 text-white font-headline font-semibold text-[11px] hover:bg-teal-700 disabled:opacity-50 transition-colors flex items-center gap-1"
+              >
+                <span className="material-symbols-outlined text-[13px]">document_scanner</span>
+                <span>{isScanningOcr ? 'Scanning AI OCR...' : 'Scan Card Image'}</span>
+              </button>
+
+              <button
+                onClick={handleSimulatedOcrScan}
+                disabled={isScanningOcr}
+                className="px-2.5 py-1 rounded-lg bg-indigo-600 text-white font-headline font-semibold text-[11px] hover:bg-indigo-700 disabled:opacity-50 transition-colors flex items-center gap-1"
+              >
+                <span className="material-symbols-outlined text-[13px]">auto_awesome</span>
+                <span>Demo AI OCR</span>
+              </button>
+            </div>
           </div>
+
+          {ocrSuccessMsg && (
+            <div className="p-3 rounded-xl bg-emerald-100 dark:bg-emerald-950/60 border border-emerald-300 dark:border-emerald-800 text-xs text-emerald-900 dark:text-emerald-200 flex items-center gap-2 animate-fade-in">
+              <span className="material-symbols-outlined text-emerald-600 text-base">verified</span>
+              <span>{ocrSuccessMsg}</span>
+            </div>
+          )}
 
           {/* Realistic Digital Insurance Card Graphic */}
           <div className="bg-gradient-to-tr from-[#14233c] via-[#1e3458] to-[#0f1a2e] rounded-3xl p-6 text-white border border-white/10 shadow-xl space-y-6 relative overflow-hidden">

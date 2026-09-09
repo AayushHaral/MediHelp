@@ -1,12 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ScreenType, DrugItem, PharmacyQuote } from './types';
 import { MOCK_DRUGS } from './data/mockData';
 import { Navbar } from './components/Navbar';
 import { SeniorAssistanceBar } from './components/SeniorAssistanceBar';
 import { ScreenSwitcherModal } from './components/ScreenSwitcherModal';
 import { ScreenQuickBar } from './components/ScreenQuickBar';
+import { InstallPwaBanner } from './components/pwa/InstallPwaBanner';
+import { OfflineIndicator } from './components/pwa/OfflineIndicator';
+import { pwaService } from './services/pwaService';
 
-// 13 Screen Components
+// 14 Screen Components
 import { DrugSearchScreen } from './components/screens/DrugSearchScreen';
 import { DrugDetailScreen } from './components/screens/DrugDetailScreen';
 import { SmartRoutingScreen } from './components/screens/SmartRoutingScreen';
@@ -31,6 +34,11 @@ export default function App() {
   const [isScreenModalOpen, setIsScreenModalOpen] = useState<boolean>(false);
   const [activeZip, setActiveZip] = useState<string>('94103');
   const [isEnterpriseMode, setIsEnterpriseMode] = useState<boolean>(false);
+
+  // Initialize PWA Service Worker on startup
+  useEffect(() => {
+    pwaService.registerServiceWorker();
+  }, []);
 
   // Handle drug selection and transition to detail
   const handleSelectDrug = (drug: DrugItem) => {
@@ -63,6 +71,9 @@ export default function App() {
     <div className="min-h-screen bg-background text-on-surface flex flex-col font-body selection:bg-secondary-container selection:text-on-secondary-container">
       {/* Senior Citizen Accessibility & Multilanguage Bar */}
       <SeniorAssistanceBar />
+
+      {/* PWA Home Screen Installation Prompt Banner */}
+      <InstallPwaBanner />
 
       {/* Top Application Navbar */}
       <Navbar
@@ -149,6 +160,9 @@ export default function App() {
         )}
       </main>
 
+      {/* Offline PWA Network Status Banner & Sync Floating Indicator */}
+      <OfflineIndicator />
+
       {/* Floating Bottom Quick Bar */}
       <ScreenQuickBar
         currentScreen={currentScreen}
@@ -156,7 +170,7 @@ export default function App() {
         onOpenModal={() => setIsScreenModalOpen(true)}
       />
 
-      {/* 13-Screen Directory Modal */}
+      {/* 14-Screen Directory Modal */}
       <ScreenSwitcherModal
         isOpen={isScreenModalOpen}
         onClose={() => setIsScreenModalOpen(false)}
