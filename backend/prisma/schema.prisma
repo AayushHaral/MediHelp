@@ -1,0 +1,120 @@
+// MediHelp Database Schema — PostgreSQL & Prisma ORM
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  PATIENT
+  CAREGIVER
+  CLINICIAN
+  PHARMACY
+}
+
+enum TransferStatus {
+  SUBMITTED
+  PHARMACIST_REVIEW
+  TRANSFERRING
+  READY_FOR_PICKUP
+  COMPLETED
+}
+
+enum AuditStatus {
+  VERIFIED
+  LOCKED
+  WARNING
+}
+
+model User {
+  id               String          @id @default(uuid())
+  email            String          @unique
+  passwordHash     String
+  name             String
+  phone            String?
+  role             Role            @default(PATIENT)
+  insuranceName    String?
+  memberId         String?
+  isSeniorEligible Boolean         @default(false)
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+  familyProfiles   FamilyProfile[]
+  adherenceLogs    AdherenceLog[]
+  auditLogs        AuditLog[]
+}
+
+model FamilyProfile {
+  id                       String   @id @default(uuid())
+  userId                   String
+  user                     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name                     String
+  relation                 String
+  dob                      String
+  allergies                String[]
+  activePrescriptionsCount Int      @default(0)
+  avatarColor              String   @default("emerald")
+  payerName                String
+  rxBin                    String
+  rxPcn                    String
+  rxGroup                  String
+  memberId                 String
+  insuranceStatus          String   @default("Verified")
+  createdAt                DateTime @default(now())
+}
+
+model Prescription {
+  id               String             @id @default(uuid())
+  rxNumber         String             @unique
+  drugName         String
+  dosage           String
+  quantity         Int
+  refillsRemaining Int
+  prescriberName   String
+  transfers        TransferRequest[]
+  adherenceLogs    AdherenceLog[]
+}
+
+model TransferRequest {
+  id                  String         @id @default(uuid())
+  prescriptionId      String?
+  prescription        Prescription?  @relation(fields: [prescriptionId], references: [id])
+  patientName         String
+  rxNumber            String
+  drugName            String
+  dosage              String
+  sourcePharmacy      String
+  destinationPharmacy String
+  status              TransferStatus @default(SUBMITTED)
+  dateSubmitted       DateTime       @default(now())
+  estimatedCompletion DateTime
+}
+
+model AdherenceLog {
+  id             String        @id @default(uuid())
+  userId         String
+  user           User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  prescriptionId String?
+  prescription   Prescription? @relation(fields: [prescriptionId], references: [id])
+  drugName       String
+  dosage         String
+  scheduledTime  String
+  taken          Boolean       @default(false)
+  takenAt        DateTime?
+  remainingPills Int
+  refillDaysLeft Int
+  createdAt      DateTime      @default(now())
+}
+
+model AuditLog {
+  id        String      @id @default(uuid())
+  userId    String
+  user      User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  event     String
+  status    AuditStatus @default(VERIFIED)
+  ipAddress String?
+  timestamp DateTime    @default(now())
+}
