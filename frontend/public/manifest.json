@@ -1,0 +1,45 @@
+{
+  "short_name": "MediHelp",
+  "name": "MediHelp - Smart Pharmacy & Prescription Savings",
+  "description": "AI-powered prescription savings, smart pharmacy routing, offline adherence tracking, and patient management platform.",
+  "icons": [
+    {
+      "src": "/assets/icon-192.png",
+      "type": "image/png",
+      "sizes": "192x192",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/assets/icon-512.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "any maskable"
+    }
+  ],
+  "start_url": "/",
+  "background_color": "#0f172a",
+  "theme_color": "#2563eb",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "categories": ["medical", "health", "lifestyle"],
+  "shortcuts": [
+    {
+      "name": "Daily Adherence Schedule",
+      "short_name": "Adherence",
+      "description": "View daily medication pill schedule",
+      "url": "/?screen=adherence-schedule"
+    },
+    {
+      "name": "Digital Discount Card",
+      "short_name": "Discount Card",
+      "description": "Open prescription savings coupon card",
+      "url": "/?screen=discount-card"
+    },
+    {
+      "name": "Drug Search",
+      "short_name": "Search",
+      "description": "Search prescription pricing & savings",
+      "url": "/?screen=catalog"
+    }
+  ]
+}
