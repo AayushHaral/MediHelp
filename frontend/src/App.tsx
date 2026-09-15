@@ -68,7 +68,8 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-background text-on-surface flex flex-col font-body selection:bg-secondary-container selection:text-on-secondary-container">
+    <div className="min-h-screen bg-background text-on-surface flex flex-col font-body selection:bg-secondary-container selection:text-on-secondary-container overflow-x-hidden w-full max-w-full">
+
       {/* Senior Citizen Accessibility & Multilanguage Bar */}
       <SeniorAssistanceBar />
 

@@ -46,27 +46,27 @@ screens = [
     "TeleconsultScreen.tsx"
 ]
 
-screens_dir = os.path.join(base_dir, "src", "components", "screens")
+screens_dir = os.path.join(base_dir, "frontend", "src", "components", "screens")
 missing_screens = [sc for sc in screens if not os.path.exists(os.path.join(screens_dir, sc))]
 
 if not missing_screens:
-    record_test("PHASE 1", "14 Screens Check", True, "All 14 operational UI screen components exist in src/components/screens.")
+    record_test("PHASE 1", "14 Screens Check", True, "All 14 operational UI screen components exist in frontend/src/components/screens.")
 else:
     record_test("PHASE 1", "14 Screens Check", False, f"Missing screens: {', '.join(missing_screens)}")
 
 # 1.2 Test Global Context Providers & Architecture
 contexts = ["AuthContext.tsx", "ThemeContext.tsx", "LanguageContext.tsx"]
-context_dir = os.path.join(base_dir, "src", "context")
+context_dir = os.path.join(base_dir, "frontend", "src", "context")
 missing_contexts = [c for c in contexts if not os.path.exists(os.path.join(context_dir, c))]
 
 if not missing_contexts:
-    record_test("PHASE 1", "Context Providers", True, "AuthContext, ThemeContext, and LanguageContext providers present.")
+    record_test("PHASE 1", "Context Providers", True, "AuthContext, ThemeContext, and LanguageContext providers present in frontend/src/context.")
 else:
     record_test("PHASE 1", "Context Providers", False, f"Missing contexts: {', '.join(missing_contexts)}")
 
 # 1.3 Test Mock Data & Types Contract
 try:
-    mock_data_path = os.path.join(base_dir, "src", "data", "mockData.ts")
+    mock_data_path = os.path.join(base_dir, "frontend", "src", "data", "mockData.ts")
     with open(mock_data_path, "r", encoding="utf-8") as f:
         content = f.read()
 
@@ -84,7 +84,7 @@ except Exception as e:
 
 # 1.4 Test HTML & Meta Tags (SEO Check)
 try:
-    html_path = os.path.join(base_dir, "index.html")
+    html_path = os.path.join(base_dir, "frontend", "index.html")
     with open(html_path, "r", encoding="utf-8") as f:
         html_content = f.read()
 
@@ -93,9 +93,9 @@ try:
     has_description = 'name="description"' in html_content
 
     if has_viewport and has_title and has_description:
-        record_test("PHASE 1", "HTML & SEO Standards", True, "index.html includes viewport meta, title, and description.")
+        record_test("PHASE 1", "HTML & SEO Standards", True, "frontend/index.html includes viewport meta, title, and description.")
     else:
-        record_test("PHASE 1", "HTML & SEO Standards", False, "index.html is missing title, description, or viewport meta tag.")
+        record_test("PHASE 1", "HTML & SEO Standards", False, "frontend/index.html is missing title, description, or viewport meta tag.")
 except Exception as e:
     record_test("PHASE 1", "HTML & SEO Standards", False, str(e))
 
@@ -120,8 +120,8 @@ except Exception as e:
 
 # 2.2 Test Gemini Service & Server AI Bridge
 try:
-    gemini_path = os.path.join(base_dir, "src", "services", "geminiService.ts")
-    server_path = os.path.join(base_dir, "server.js")
+    gemini_path = os.path.join(base_dir, "frontend", "src", "services", "geminiService.ts")
+    server_path = os.path.join(base_dir, "backend", "server.js")
 
     with open(gemini_path, "r", encoding="utf-8") as f:
         gemini_code = f.read()
@@ -135,7 +135,7 @@ try:
     has_explain_endpoint = "/api/ai/explain-interaction" in server_code
 
     if has_ocr and has_explain and has_ocr_endpoint and has_explain_endpoint:
-        record_test("PHASE 2", "Gemini Vision AI Engine", True, "Gemini Vision OCR & Explain Interaction services & server endpoints verified.")
+        record_test("PHASE 2", "Gemini Vision AI Engine", True, "Gemini Vision OCR & Explain Interaction services & backend server AI bridge endpoints verified.")
     else:
         record_test("PHASE 2", "Gemini Vision AI Engine", False, "Missing Gemini service functions or server AI bridge endpoints.")
 except Exception as e:
@@ -148,7 +148,7 @@ print("\n--- Phase 3: Backend Services, HIPAA & Auth Infrastructure ---")
 
 # 3.1 Test Prisma ORM Database Schema
 try:
-    prisma_path = os.path.join(base_dir, "prisma", "schema.prisma")
+    prisma_path = os.path.join(base_dir, "backend", "prisma", "schema.prisma")
     with open(prisma_path, "r", encoding="utf-8") as f:
         schema_code = f.read()
 
@@ -156,7 +156,7 @@ try:
     missing_models = [m for m in required_models if m not in schema_code]
 
     if not missing_models:
-        record_test("PHASE 3", "Prisma Database Schema", True, f"All {len(required_models)} data models defined in schema.prisma.")
+        record_test("PHASE 3", "Prisma Database Schema", True, f"All {len(required_models)} data models defined in backend/prisma/schema.prisma.")
     else:
         record_test("PHASE 3", "Prisma Database Schema", False, f"Missing models: {', '.join(missing_models)}")
 except Exception as e:
@@ -164,8 +164,8 @@ except Exception as e:
 
 # 3.2 Test Security Audit & dbService Persistence
 try:
-    security_path = os.path.join(base_dir, "src", "services", "securityAuditService.ts")
-    db_path = os.path.join(base_dir, "src", "services", "dbService.ts")
+    security_path = os.path.join(base_dir, "frontend", "src", "services", "securityAuditService.ts")
+    db_path = os.path.join(base_dir, "frontend", "src", "services", "dbService.ts")
 
     with open(security_path, "r", encoding="utf-8") as f:
         security_code = f.read()
@@ -186,7 +186,7 @@ except Exception as e:
 
 # 3.3 Test Automated SMS Reminder Microservice
 try:
-    reminder_path = os.path.join(base_dir, "src", "services", "reminderService.ts")
+    reminder_path = os.path.join(base_dir, "frontend", "src", "services", "reminderService.ts")
     with open(reminder_path, "r", encoding="utf-8") as f:
         reminder_code = f.read()
 
@@ -205,11 +205,11 @@ print("\n--- Phase 4: Offline PWA & Native Mobile Wrappers ---")
 
 # 4.1 Test Web App Manifest & Service Worker
 try:
-    manifest_path = os.path.join(base_dir, "public", "manifest.json")
+    manifest_path = os.path.join(base_dir, "frontend", "public", "manifest.json")
     with open(manifest_path, "r", encoding="utf-8") as f:
         manifest_data = json.load(f)
 
-    sw_path = os.path.join(base_dir, "public", "sw.js")
+    sw_path = os.path.join(base_dir, "frontend", "public", "sw.js")
     with open(sw_path, "r", encoding="utf-8") as f:
         sw_content = f.read()
 
@@ -220,7 +220,7 @@ try:
     has_sw_push = "push" in sw_content
 
     if has_short_name and has_icons and has_display and has_sw_cache and has_sw_push:
-        record_test("PHASE 4", "PWA Manifest & Service Worker", True, "public/manifest.json and public/sw.js correctly configured.")
+        record_test("PHASE 4", "PWA Manifest & Service Worker", True, "frontend/public/manifest.json and frontend/public/sw.js correctly configured.")
     else:
         record_test("PHASE 4", "PWA Manifest & Service Worker", False, "PWA manifest or service worker script incomplete.")
 except Exception as e:
@@ -228,8 +228,8 @@ except Exception as e:
 
 # 4.2 Test PWA & Capacitor Native Mobile Bridge Services
 try:
-    pwa_path = os.path.join(base_dir, "src", "services", "pwaService.ts")
-    cap_path = os.path.join(base_dir, "src", "services", "capacitorService.ts")
+    pwa_path = os.path.join(base_dir, "frontend", "src", "services", "pwaService.ts")
+    cap_path = os.path.join(base_dir, "frontend", "src", "services", "capacitorService.ts")
 
     with open(pwa_path, "r", encoding="utf-8") as f:
         pwa_code = f.read()
@@ -254,7 +254,7 @@ print("\n--- Phase 5: B2B Enterprise & HL7 FHIR EHR Integrations ---")
 
 # 5.1 Test HL7 FHIR R4 EHR Gateway Service
 try:
-    fhir_path = os.path.join(base_dir, "src", "services", "fhirService.ts")
+    fhir_path = os.path.join(base_dir, "frontend", "src", "services", "fhirService.ts")
     with open(fhir_path, "r", encoding="utf-8") as f:
         fhir_code = f.read()
 
@@ -270,7 +270,7 @@ except Exception as e:
 
 # 5.2 Test Live Partner Inventory Sync & B2B Coupon Claims
 try:
-    inventory_path = os.path.join(base_dir, "src", "services", "partnerInventoryService.ts")
+    inventory_path = os.path.join(base_dir, "frontend", "src", "services", "partnerInventoryService.ts")
     with open(inventory_path, "r", encoding="utf-8") as f:
         inventory_code = f.read()
 
@@ -286,7 +286,7 @@ except Exception as e:
 
 # 5.3 Test Enterprise Population Health Analytics (PDC Score)
 try:
-    analytics_path = os.path.join(base_dir, "src", "services", "enterpriseAnalyticsService.ts")
+    analytics_path = os.path.join(base_dir, "frontend", "src", "services", "enterpriseAnalyticsService.ts")
     with open(analytics_path, "r", encoding="utf-8") as f:
         analytics_code = f.read()
 
