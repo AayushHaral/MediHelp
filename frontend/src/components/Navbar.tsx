@@ -31,7 +31,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   return (
     <header className="sticky top-0 z-40 bg-surface-container-lowest/95 backdrop-blur-md border-b border-outline-variant/30 px-3 sm:px-6 lg:px-8 py-2.5 transition-all w-full overflow-hidden">
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row md:items-center md:justify-between gap-2 md:gap-4">
-        {/* Top Row on Mobile / Main Row on Desktop */}
+        {/* Top Row on Mobile: Logo & Location */}
         <div className="flex items-center justify-between gap-2 w-full md:w-auto">
           {/* Brand / Logo */}
           <button
@@ -56,42 +56,16 @@ export const Navbar: React.FC<NavbarProps> = ({
             </div>
           </button>
 
-          {/* Location Badge (Tablet & Desktop) */}
-          <div className="hidden lg:flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-container text-xs text-on-surface-variant font-medium border border-outline-variant/20 shrink-0">
-            <span className="material-symbols-outlined text-[16px] text-secondary">location_on</span>
-            <span>{t('nav.location', 'SF Bay Area, CA')}</span>
+          {/* Location Badge */}
+          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-surface-container text-xs text-on-surface-variant font-medium border border-outline-variant/20 shrink-0">
+            <span className="material-symbols-outlined text-[15px] text-secondary">location_on</span>
+            <span className="hidden sm:inline">{t('nav.location', 'SF Bay Area, CA')}</span>
             <span className="font-mono text-on-surface font-semibold">{activeZip}</span>
-          </div>
-
-          {/* Mobile Profile / Sign In button */}
-          <div className="md:hidden flex items-center gap-1.5 shrink-0">
-            {isLoggedIn && currentUser ? (
-              <button
-                onClick={() => onSelectScreen('auth')}
-                className="flex items-center gap-1.5 p-1 pr-2.5 rounded-full bg-surface-container hover:bg-surface-container-high transition-colors border border-outline-variant/30"
-                title="View Account Profile"
-              >
-                <div className="w-7 h-7 rounded-full bg-secondary text-white font-semibold text-xs flex items-center justify-center">
-                  {currentUser.avatarInitials}
-                </div>
-                <span className="text-xs font-semibold text-on-surface max-w-[75px] truncate">
-                  {currentUser.name.split(' ')[0]}
-                </span>
-              </button>
-            ) : (
-              <button
-                onClick={() => onSelectScreen('auth')}
-                className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-secondary text-white text-xs font-semibold shadow-xs hover:bg-secondary/90 transition-colors"
-              >
-                <span className="material-symbols-outlined text-[15px]">lock</span>
-                <span>{t('auth.signIn', 'Sign In')}</span>
-              </button>
-            )}
           </div>
         </div>
 
-        {/* Upside Controls Slide Bar: Scrollable horizontal strip for Screens, Lang, Theme, Login & Modes */}
-        <div className="w-full md:w-auto flex items-center gap-2 overflow-x-auto no-scrollbar scrollbar-none py-1 px-1 flex-nowrap shrink-0 touch-pan-x scroll-smooth rounded-xl bg-surface-container-low/40 md:bg-transparent border border-outline-variant/20 md:border-none">
+        {/* Unified Controls Slide Bar for Mobile & Desktop: Screens, Language, Single Theme Toggle, Login & Modes */}
+        <div className="w-full md:w-auto flex items-center gap-2 overflow-x-auto no-scrollbar scrollbar-none py-1.5 px-2 flex-nowrap shrink-0 touch-pan-x scroll-smooth rounded-2xl bg-surface-container-low/70 md:bg-transparent border border-outline-variant/25 md:border-none shadow-xs md:shadow-none">
           {/* Quick Screen Navigator Button */}
           <button
             onClick={onOpenScreenModal}
@@ -110,10 +84,33 @@ export const Navbar: React.FC<NavbarProps> = ({
             <LanguageSelector />
           </div>
 
-          {/* Light / Dark Mode Toggle */}
+          {/* Single 1-Click Theme Toggle Button (No 3-Option Dropdown) */}
+          <ThemeToggle variant="icon" className="shrink-0" />
+
+          {/* Patient Card / Auth Login Button */}
           <div className="shrink-0">
-            <ThemeToggle variant="pill" className="hidden sm:inline-block" />
-            <ThemeToggle variant="icon" className="sm:hidden" />
+            {isLoggedIn && currentUser ? (
+              <button
+                onClick={() => onSelectScreen('auth')}
+                className="flex items-center gap-1.5 pl-1.5 pr-3 py-1 rounded-full bg-surface-container hover:bg-surface-container-high transition-colors border border-outline-variant/30 shrink-0 whitespace-nowrap"
+                title="View Account Profile & Session"
+              >
+                <div className="w-6 h-6 rounded-full bg-secondary text-white font-semibold text-xs flex items-center justify-center">
+                  {currentUser.avatarInitials}
+                </div>
+                <span className="text-xs font-semibold text-on-surface">
+                  {currentUser.name.split(' ')[0]}
+                </span>
+              </button>
+            ) : (
+              <button
+                onClick={() => onSelectScreen('auth')}
+                className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-secondary text-white text-xs font-semibold shadow-xs hover:bg-secondary/90 transition-colors shrink-0 whitespace-nowrap"
+              >
+                <span className="material-symbols-outlined text-[15px]">lock</span>
+                <span>{t('auth.signIn', 'Sign In')}</span>
+              </button>
+            )}
           </div>
 
           {/* Senior Citizen Accessibility Toggle */}
@@ -150,37 +147,6 @@ export const Navbar: React.FC<NavbarProps> = ({
                 : t('nav.consumerMode', 'Consumer')}
             </span>
           </button>
-
-          {/* Patient Card / Auth button (Desktop / Tablet view) */}
-          <div className="hidden md:block shrink-0">
-            {isLoggedIn && currentUser ? (
-              <button
-                onClick={() => onSelectScreen('auth')}
-                className="flex items-center gap-2 pl-2 pr-3 py-1 rounded-full bg-surface-container hover:bg-surface-container-high transition-colors border border-outline-variant/30"
-                title="View Account Profile & Session"
-              >
-                <div className="w-7 h-7 rounded-full bg-secondary text-white font-semibold text-xs flex items-center justify-center">
-                  {currentUser.avatarInitials}
-                </div>
-                <div className="text-left hidden lg:block">
-                  <p className="text-xs font-semibold leading-tight text-on-surface truncate max-w-[90px]">
-                    {currentUser.name.split(' ')[0]}
-                  </p>
-                  <p className="text-[10px] text-secondary font-mono leading-tight truncate max-w-[90px]">
-                    {currentUser.role === 'caregiver' ? 'Caregiver' : currentUser.insuranceName ? currentUser.insuranceName.split(' ')[0] : 'Member'}
-                  </p>
-                </div>
-              </button>
-            ) : (
-              <button
-                onClick={() => onSelectScreen('auth')}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-secondary text-white text-xs font-semibold shadow-xs hover:bg-secondary/90 transition-colors"
-              >
-                <span className="material-symbols-outlined text-[16px]">lock</span>
-                <span>{t('auth.signIn', 'Sign In')}</span>
-              </button>
-            )}
-          </div>
 
           {/* Quick Shortcuts */}
           <div className="hidden xl:flex items-center gap-1 pl-2 border-l border-outline-variant/30 shrink-0">
