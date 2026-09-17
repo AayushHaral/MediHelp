@@ -1,4 +1,5 @@
 import React from 'react';
+import { createPortal } from 'react-dom';
 import { useLanguage } from '../context/LanguageContext';
 
 interface SeniorGuideModalProps {
@@ -20,8 +21,8 @@ export const SeniorGuideModal: React.FC<SeniorGuideModalProps> = ({ isOpen, onCl
     speakText(fullGuideText);
   };
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-150">
+  return createPortal(
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-150">
       <div
         className="bg-surface-container-lowest rounded-3xl shadow-2xl border border-outline-variant/40 w-full max-w-2xl max-h-[90vh] flex flex-col overflow-hidden text-on-surface"
         role="dialog"
@@ -162,6 +163,8 @@ export const SeniorGuideModal: React.FC<SeniorGuideModalProps> = ({ isOpen, onCl
           </button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };
+
