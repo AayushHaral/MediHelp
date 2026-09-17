@@ -78,11 +78,11 @@ export const LanguageSelector: React.FC<LanguageSelectorProps> = ({
       {/* Language Selection Modal Dialog - Rendered at body level via Portal */}
       {isOpen &&
         createPortal(
-          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-in fade-in duration-150">
+          <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center p-4 sm:p-6 bg-black/70 backdrop-blur-sm animate-in fade-in duration-150 overflow-y-auto">
             {/* Backdrop click to close */}
             <div className="absolute inset-0" onClick={() => setIsOpen(false)} />
 
-            <div className="relative w-[92vw] sm:w-full max-w-md bg-surface-container-lowest border border-outline-variant/40 rounded-3xl shadow-2xl p-4 sm:p-5 z-10 animate-in zoom-in-95 duration-150 max-h-[85vh] flex flex-col">
+            <div className="relative my-auto w-[92vw] sm:w-full max-w-md bg-surface-container-lowest border border-outline-variant/40 rounded-3xl shadow-2xl p-4 sm:p-5 z-10 animate-in zoom-in-95 duration-150 max-h-[80vh] flex flex-col">
               <div className="flex items-center justify-between pb-3 border-b border-outline-variant/20 mb-3 shrink-0">
                 <div className="flex items-center gap-2">
                   <span className="material-symbols-outlined text-secondary text-2xl">translate</span>
