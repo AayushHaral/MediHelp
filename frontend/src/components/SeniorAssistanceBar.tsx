@@ -19,13 +19,13 @@ export const SeniorAssistanceBar: React.FC = () => {
 
   return (
     <>
-      <div className="bg-primary-container text-on-primary-container border-b border-outline-variant/30 py-1.5 px-3 lg:px-8 transition-all w-full overflow-hidden">
+      <div className="bg-primary-container text-on-primary-container border-b border-outline-variant/30 py-1.5 px-3 lg:px-8 transition-all w-full">
         <div className="max-w-7xl mx-auto flex items-center justify-between gap-2 text-xs">
           {/* Left: Senior Mode indicator & Badge */}
           <div className="flex items-center gap-2 shrink-0">
             <button
               onClick={toggleSeniorMode}
-              className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold transition-all shadow-xs ${
+              className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold transition-all shadow-xs shrink-0 ${
                 isSeniorMode
                   ? 'bg-secondary text-white ring-2 ring-secondary/50'
                   : 'bg-surface-container-high text-on-surface hover:bg-surface-variant'
@@ -35,9 +35,10 @@ export const SeniorAssistanceBar: React.FC = () => {
               <span className="material-symbols-outlined text-[16px]">
                 {isSeniorMode ? 'elderly' : 'accessibility_new'}
               </span>
-              <span className="whitespace-nowrap">{t('nav.seniorMode')}</span>
+              <span className="hidden sm:inline whitespace-nowrap">{t('nav.seniorMode')}</span>
+              <span className="sm:hidden font-bold">Senior</span>
               <span
-                className={`w-2 h-2 rounded-full ${
+                className={`w-2 h-2 rounded-full shrink-0 ${
                   isSeniorMode ? 'bg-emerald-300 animate-pulse' : 'bg-outline/50'
                 }`}
               />

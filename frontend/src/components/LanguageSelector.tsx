@@ -64,17 +64,15 @@ export const LanguageSelector: React.FC<LanguageSelectorProps> = ({
         id="language-selector-btn"
         type="button"
         onClick={() => setIsOpen(true)}
-        className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface border border-outline-variant/30 shadow-xs text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-secondary/40 shrink-0 ${className}`}
+        className={`flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface border border-outline-variant/30 shadow-xs text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-secondary/40 shrink-0 ${className}`}
         aria-haspopup="dialog"
         aria-expanded={isOpen}
         title="Choose language / 选择语言 / Seleccionar idioma"
       >
-        <span className="text-base" role="img" aria-label={currentLanguageOption.label}>
-          {currentLanguageOption.flag}
-        </span>
+        <span className="material-symbols-outlined text-[16px] text-secondary shrink-0">translate</span>
         <span className="hidden sm:inline font-medium">{currentLanguageOption.nativeLabel}</span>
-        <span className="sm:hidden font-medium uppercase">{currentLanguageOption.code}</span>
-        <span className="material-symbols-outlined text-[16px] text-on-surface-variant">expand_more</span>
+        <span className="sm:hidden font-bold uppercase text-[11px] tracking-wide">{currentLanguageOption.code}</span>
+        <span className="material-symbols-outlined text-[14px] text-on-surface-variant shrink-0">expand_more</span>
       </button>
 
       {/* Language Selection Modal Dialog - Rendered at body level via Portal */}

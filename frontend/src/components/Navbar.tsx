@@ -69,11 +69,12 @@ export const Navbar: React.FC<NavbarProps> = ({
           {/* Quick Screen Navigator Button */}
           <button
             onClick={onOpenScreenModal}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-surface-container-high hover:bg-surface-variant text-on-surface text-xs sm:text-sm font-semibold transition-colors border border-outline-variant/30 shadow-xs shrink-0 whitespace-nowrap"
+            className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl bg-surface-container-high hover:bg-surface-variant text-on-surface text-xs sm:text-sm font-semibold transition-colors border border-outline-variant/30 shadow-xs shrink-0 whitespace-nowrap"
             title={`Switch between all ${ALL_SCREENS.length} application screens`}
           >
             <span className="material-symbols-outlined text-[18px] sm:text-[20px] text-secondary">grid_view</span>
-            <span>{t('nav.screensShort', 'Screens')}</span>
+            <span className="hidden sm:inline">{t('nav.screensShort', 'Screens')}</span>
+            <span className="sm:hidden">{t('nav.screensShort', 'Screens').split(' ')[0]}</span>
             <span className="px-1.5 py-0.2 bg-primary-container text-primary-fixed rounded text-xs font-mono font-bold">
               {ALL_SCREENS.length}
             </span>
@@ -92,13 +93,13 @@ export const Navbar: React.FC<NavbarProps> = ({
             {isLoggedIn && currentUser ? (
               <button
                 onClick={() => onSelectScreen('auth')}
-                className="flex items-center gap-1.5 pl-1.5 pr-3 py-1 rounded-full bg-surface-container hover:bg-surface-container-high transition-colors border border-outline-variant/30 shrink-0 whitespace-nowrap"
+                className="flex items-center gap-1.5 pl-1.5 pr-2.5 sm:pr-3 py-1 rounded-full bg-surface-container hover:bg-surface-container-high transition-colors border border-outline-variant/30 shrink-0 whitespace-nowrap"
                 title="View Account Profile & Session"
               >
                 <div className="w-6 h-6 rounded-full bg-secondary text-white font-semibold text-xs flex items-center justify-center">
                   {currentUser.avatarInitials}
                 </div>
-                <span className="text-xs font-semibold text-on-surface">
+                <span className="text-xs font-semibold text-on-surface hidden sm:inline">
                   {currentUser.name.split(' ')[0]}
                 </span>
               </button>
@@ -126,7 +127,8 @@ export const Navbar: React.FC<NavbarProps> = ({
             <span className="material-symbols-outlined text-[16px]">
               {isSeniorMode ? 'elderly' : 'accessibility_new'}
             </span>
-            <span>{t('nav.seniorMode', 'Senior')}</span>
+            <span className="hidden sm:inline">{t('nav.seniorMode', 'Senior')}</span>
+            <span className="sm:hidden">Senior</span>
           </button>
 
           {/* Mode Switcher */}
@@ -141,10 +143,13 @@ export const Navbar: React.FC<NavbarProps> = ({
             <span className="material-symbols-outlined text-[15px]">
               {isEnterpriseMode ? 'admin_panel_settings' : 'storefront'}
             </span>
-            <span>
+            <span className="hidden sm:inline">
               {isEnterpriseMode
                 ? t('nav.enterpriseMode', 'Enterprise OS')
                 : t('nav.consumerMode', 'Consumer')}
+            </span>
+            <span className="sm:hidden">
+              {isEnterpriseMode ? 'Enterprise' : 'Consumer'}
             </span>
           </button>
 
