@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: medihelp-backend
+    env: node
+    plan: free
+    buildCommand: npm --prefix backend install && npm --prefix backend run build
+    startCommand: npm --prefix backend run start
+    envVars:
+      - key: NODE_VERSION
+        value: 20.0.0
+      - key: PORT
+        value: 5000
