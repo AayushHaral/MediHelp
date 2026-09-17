@@ -22,22 +22,6 @@ export const SUPPORTED_LANGUAGES: LanguageOption[] = [
     seniorGreeting: 'Senior Healthcare & Rx Savings'
   },
   {
-    code: 'es',
-    label: 'Spanish',
-    nativeLabel: 'Español',
-    flag: '🇪🇸',
-    speechLocale: 'es-US',
-    seniorGreeting: 'Ahorros en Medicamentos para Adultos Mayores'
-  },
-  {
-    code: 'zh',
-    label: 'Chinese',
-    nativeLabel: '简体中文',
-    flag: '🇨🇳',
-    speechLocale: 'zh-CN',
-    seniorGreeting: '长者长辈处方药省钱指南与无障碍服务'
-  },
-  {
     code: 'hi',
     label: 'Hindi',
     nativeLabel: 'हिन्दी',
@@ -52,6 +36,22 @@ export const SUPPORTED_LANGUAGES: LanguageOption[] = [
     flag: '🇮🇳',
     speechLocale: 'mr-IN',
     seniorGreeting: 'ज्येष्ठ नागरिक आरोग्य व औषध बचत सहाय्य'
+  },
+  {
+    code: 'es',
+    label: 'Spanish',
+    nativeLabel: 'Español',
+    flag: '🇪🇸',
+    speechLocale: 'es-US',
+    seniorGreeting: 'Ahorros en Medicamentos para Adultos Mayores'
+  },
+  {
+    code: 'zh',
+    label: 'Chinese',
+    nativeLabel: '简体中文',
+    flag: '🇨🇳',
+    speechLocale: 'zh-CN',
+    seniorGreeting: '长者长辈处方药省钱指南与无障碍服务'
   },
   {
     code: 'vi',
