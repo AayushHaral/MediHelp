@@ -2,7 +2,6 @@ import React from 'react';
 import { ScreenType } from '../types';
 import { ALL_SCREENS } from '../data/mockData';
 import { ThemeToggle } from './ThemeToggle';
-import { LanguageSelector } from './LanguageSelector';
 import { useLanguage } from '../context/LanguageContext';
 import { useAuth } from '../context/AuthContext';
 
@@ -79,11 +78,6 @@ export const Navbar: React.FC<NavbarProps> = ({
               {ALL_SCREENS.length}
             </span>
           </button>
-
-          {/* Multilanguage Selector */}
-          <div className="shrink-0">
-            <LanguageSelector />
-          </div>
 
           {/* Single 1-Click Theme Toggle Button (No 3-Option Dropdown) */}
           <ThemeToggle variant="icon" className="shrink-0" />

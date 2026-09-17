@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useLanguage, TextSize } from '../context/LanguageContext';
-import { LanguageSelector } from './LanguageSelector';
 import { SeniorGuideModal } from './SeniorGuideModal';
 
 export const SeniorAssistanceBar: React.FC = () => {
@@ -107,11 +106,6 @@ export const SeniorAssistanceBar: React.FC = () => {
               >
                 A++
               </button>
-            </div>
-
-            {/* Language Switcher - visible on sm+ to prevent duplicate mobile dropdown */}
-            <div className="hidden sm:block shrink-0">
-              <LanguageSelector />
             </div>
 
             {/* Senior Guide Button */}

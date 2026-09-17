@@ -21,7 +21,7 @@ interface SecurityAuditLog {
 export const PatientProfileScreen: React.FC<PatientProfileScreenProps> = ({ onNavigate }) => {
   const [profiles, setProfiles] = useState<FamilyProfile[]>(MOCK_FAMILY_PROFILES);
   const [selectedProfileId, setSelectedProfileId] = useState<string>('prof-1');
-  const { language, setLanguage, textSize, setTextSize, isSeniorMode, toggleSeniorMode, t } = useLanguage();
+  const { textSize, setTextSize, isSeniorMode, toggleSeniorMode, t } = useLanguage();
 
   // OCR & Gemini Vision State
   const [isScanningOcr, setIsScanningOcr] = useState<boolean>(false);
@@ -909,33 +909,6 @@ export const PatientProfileScreen: React.FC<PatientProfileScreenProps> = ({ onNa
                     >
                       130%
                     </button>
-                  </div>
-                </div>
-
-                {/* Language Select */}
-                <div className="pt-1 border-t border-outline-variant/15 space-y-1.5">
-                  <span className="text-xs text-on-surface-variant block">Active Language (6 Options)</span>
-                  <div className="grid grid-cols-2 gap-1.5">
-                    {SUPPORTED_LANGUAGES.map((lang) => {
-                      const isSelected = language === lang.code;
-                      return (
-                        <button
-                          key={lang.code}
-                          type="button"
-                          onClick={() => setLanguage(lang.code)}
-                          className={`px-2 py-1.5 rounded-lg text-left text-xs flex items-center gap-1.5 border transition-all ${
-                            isSelected
-                              ? 'bg-secondary/15 border-secondary text-secondary font-bold'
-                              : 'bg-surface-container border-outline-variant/20 text-on-surface hover:bg-surface-container-high'
-                          }`}
-                        >
-                          <span role="img" aria-label={lang.label}>
-                            {lang.flag}
-                          </span>
-                          <span className="truncate">{lang.nativeLabel.split(' ')[0]}</span>
-                        </button>
-                      );
-                    })}
                   </div>
                 </div>
               </div>
